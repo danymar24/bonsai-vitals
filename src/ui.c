@@ -9,12 +9,66 @@
 ///////////////////// VARIABLES ////////////////////
 
 
-// SCREEN: ui_Screen1
-void ui_Screen1_screen_init(void);
-lv_obj_t * ui_Screen1;
+// SCREEN: ui_MoistureScreen
+void ui_MoistureScreen_screen_init(void);
+lv_obj_t * ui_MoistureScreen;
 lv_obj_t * ui_MoistureLabel;
+lv_obj_t * ui_MoistureGauge;
+lv_obj_t * ui_MoisturePercentageLabel;
+void ui_event_SettingsButton(lv_event_t * e);
+lv_obj_t * ui_SettingsButton;
+lv_obj_t * ui_MoistureScreenWifiIndicator;
 // CUSTOM VARIABLES
+lv_obj_t * uic_MoistureScreen;
 lv_obj_t * uic_MoistureLabel;
+lv_obj_t * uic_MoistureGauge;
+lv_obj_t * uic_MoisturePercentageLabel;
+lv_obj_t * uic_SettingsButton;
+lv_obj_t * uic_MoistureScreenWifiIndicator;
+
+
+// SCREEN: ui_SettingsScreen
+void ui_SettingsScreen_screen_init(void);
+lv_obj_t * ui_SettingsScreen;
+void ui_event_SettingsBackButton(lv_event_t * e);
+lv_obj_t * ui_SettingsBackButton;
+void ui_event_WiFiSettingsButton(lv_event_t * e);
+lv_obj_t * ui_WiFiSettingsButton;
+lv_obj_t * ui_WifiSettingsButtonLabel;
+// CUSTOM VARIABLES
+lv_obj_t * uic_SettingsScreen;
+lv_obj_t * uic_SettingsBackButton;
+lv_obj_t * uic_WiFiSettingsButton;
+lv_obj_t * uic_WifiSettingsButtonLabel;
+
+
+// SCREEN: ui_WiFiScreen
+void ui_WiFiScreen_screen_init(void);
+lv_obj_t * ui_WiFiScreen;
+void ui_event_SettingsScreenBackButton(lv_event_t * e);
+lv_obj_t * ui_SettingsScreenBackButton;
+void ui_event_ScanWifiNetworksButton(lv_event_t * e);
+lv_obj_t * ui_ScanWifiNetworksButton;
+lv_obj_t * ui_ScanWifiNetworksButtonLabel;
+lv_obj_t * ui_WifiNetworksDropdown;
+void ui_event_PasswordInput(lv_event_t * e);
+lv_obj_t * ui_PasswordInput;
+void ui_event_ConnectToNetworkButton(lv_event_t * e);
+lv_obj_t * ui_ConnectToNetworkButton;
+lv_obj_t * ui_ConnectToNetworkButtonLabel;
+lv_obj_t * ui_PasswordKeyboard;
+lv_obj_t * ui_ConnectedNetworkLabel;
+// CUSTOM VARIABLES
+lv_obj_t * uic_WiFiScreen;
+lv_obj_t * uic_SettingsScreenBackButton;
+lv_obj_t * uic_ScanWifiNetworksButton;
+lv_obj_t * uic_ScanWifiNetworksButtonLabel;
+lv_obj_t * uic_WifiNetworksDropdown;
+lv_obj_t * uic_PasswordInput;
+lv_obj_t * uic_ConnectToNetworkButton;
+lv_obj_t * uic_ConnectToNetworkButtonLabel;
+lv_obj_t * uic_PasswordKeyboard;
+lv_obj_t * uic_ConnectedNetworkLabel;
 
 // EVENTS
 lv_obj_t * ui____initial_actions0;
@@ -32,6 +86,71 @@ lv_obj_t * ui____initial_actions0;
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
+void ui_event_SettingsButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_SettingsScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 250, 0, &ui_SettingsScreen_screen_init);
+    }
+}
+
+void ui_event_SettingsBackButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_MoistureScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_MoistureScreen_screen_init);
+    }
+}
+
+void ui_event_WiFiSettingsButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_WiFiScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 250, 0, &ui_WiFiScreen_screen_init);
+    }
+}
+
+void ui_event_SettingsScreenBackButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_SettingsScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_SettingsScreen_screen_init);
+    }
+}
+
+void ui_event_ScanWifiNetworksButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        scanWifiNetworks(e);
+    }
+}
+
+void ui_event_PasswordInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_FOCUSED) {
+        _ui_basic_set_property(ui_PasswordKeyboard, _UI_BASIC_PROPERTY_HEIGHT,  228);
+    }
+    if(event_code == LV_EVENT_DEFOCUSED) {
+        _ui_basic_set_property(ui_PasswordKeyboard, _UI_BASIC_PROPERTY_HEIGHT,  0);
+    }
+}
+
+void ui_event_ConnectToNetworkButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        connectToWifi(e);
+    }
+}
 
 ///////////////////// SCREENS ////////////////////
 
@@ -41,7 +160,9 @@ void ui_init(void)
     lv_theme_t * theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
                                                false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
-    ui_Screen1_screen_init();
+    ui_MoistureScreen_screen_init();
+    ui_SettingsScreen_screen_init();
+    ui_WiFiScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
-    lv_disp_load_scr(ui_Screen1);
+    lv_disp_load_scr(ui_MoistureScreen);
 }

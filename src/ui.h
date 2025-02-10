@@ -16,16 +16,75 @@ extern "C" {
 #include "ui_events.h"
 
 
-// SCREEN: ui_Screen1
-void ui_Screen1_screen_init(void);
-extern lv_obj_t * ui_Screen1;
+// SCREEN: ui_MoistureScreen
+void ui_MoistureScreen_screen_init(void);
+extern lv_obj_t * ui_MoistureScreen;
 extern lv_obj_t * ui_MoistureLabel;
+extern lv_obj_t * ui_MoistureGauge;
+extern lv_obj_t * ui_MoisturePercentageLabel;
+void ui_event_SettingsButton(lv_event_t * e);
+extern lv_obj_t * ui_SettingsButton;
+extern lv_obj_t * ui_MoistureScreenWifiIndicator;
 // CUSTOM VARIABLES
+extern lv_obj_t * uic_MoistureScreen;
 extern lv_obj_t * uic_MoistureLabel;
+extern lv_obj_t * uic_MoistureGauge;
+extern lv_obj_t * uic_MoisturePercentageLabel;
+extern lv_obj_t * uic_SettingsButton;
+extern lv_obj_t * uic_MoistureScreenWifiIndicator;
+
+// SCREEN: ui_SettingsScreen
+void ui_SettingsScreen_screen_init(void);
+extern lv_obj_t * ui_SettingsScreen;
+void ui_event_SettingsBackButton(lv_event_t * e);
+extern lv_obj_t * ui_SettingsBackButton;
+void ui_event_WiFiSettingsButton(lv_event_t * e);
+extern lv_obj_t * ui_WiFiSettingsButton;
+extern lv_obj_t * ui_WifiSettingsButtonLabel;
+// CUSTOM VARIABLES
+extern lv_obj_t * uic_SettingsScreen;
+extern lv_obj_t * uic_SettingsBackButton;
+extern lv_obj_t * uic_WiFiSettingsButton;
+extern lv_obj_t * uic_WifiSettingsButtonLabel;
+
+// SCREEN: ui_WiFiScreen
+void ui_WiFiScreen_screen_init(void);
+extern lv_obj_t * ui_WiFiScreen;
+void ui_event_SettingsScreenBackButton(lv_event_t * e);
+extern lv_obj_t * ui_SettingsScreenBackButton;
+void ui_event_ScanWifiNetworksButton(lv_event_t * e);
+extern lv_obj_t * ui_ScanWifiNetworksButton;
+extern lv_obj_t * ui_ScanWifiNetworksButtonLabel;
+extern lv_obj_t * ui_WifiNetworksDropdown;
+void ui_event_PasswordInput(lv_event_t * e);
+extern lv_obj_t * ui_PasswordInput;
+void ui_event_ConnectToNetworkButton(lv_event_t * e);
+extern lv_obj_t * ui_ConnectToNetworkButton;
+extern lv_obj_t * ui_ConnectToNetworkButtonLabel;
+extern lv_obj_t * ui_PasswordKeyboard;
+extern lv_obj_t * ui_ConnectedNetworkLabel;
+// CUSTOM VARIABLES
+extern lv_obj_t * uic_WiFiScreen;
+extern lv_obj_t * uic_SettingsScreenBackButton;
+extern lv_obj_t * uic_ScanWifiNetworksButton;
+extern lv_obj_t * uic_ScanWifiNetworksButtonLabel;
+extern lv_obj_t * uic_WifiNetworksDropdown;
+extern lv_obj_t * uic_PasswordInput;
+extern lv_obj_t * uic_ConnectToNetworkButton;
+extern lv_obj_t * uic_ConnectToNetworkButtonLabel;
+extern lv_obj_t * uic_PasswordKeyboard;
+extern lv_obj_t * uic_ConnectedNetworkLabel;
 
 // EVENTS
 
 extern lv_obj_t * ui____initial_actions0;
+
+// IMAGES AND IMAGE SETS
+LV_IMG_DECLARE(ui_img_gauge_png);    // assets/gauge.png
+LV_IMG_DECLARE(ui_img_1588936248);    // assets/gauge-solid.png
+LV_IMG_DECLARE(ui_img_cogwheel_png);    // assets/cogwheel.png
+LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
+LV_IMG_DECLARE(ui_img_786474294);    // assets/back-arrow.png
 
 // UI INIT
 void ui_init(void);

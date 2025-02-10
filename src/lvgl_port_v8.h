@@ -5,9 +5,9 @@
  */
 #pragma once
 
-#include <Arduino.h>
 #include <ESP_Panel_Library.h>
 #include <lvgl.h>
+
 
 // *INDENT-OFF*
 
