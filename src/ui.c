@@ -14,17 +14,17 @@ void ui_MoistureScreen_screen_init(void);
 lv_obj_t * ui_MoistureScreen;
 lv_obj_t * ui_MoistureLabel;
 lv_obj_t * ui_MoistureGauge;
-lv_obj_t * ui_MoisturePercentageLabel;
 void ui_event_SettingsButton(lv_event_t * e);
 lv_obj_t * ui_SettingsButton;
 lv_obj_t * ui_MoistureScreenWifiIndicator;
+lv_obj_t * ui_MoisturePercentageLabel;
 // CUSTOM VARIABLES
 lv_obj_t * uic_MoistureScreen;
 lv_obj_t * uic_MoistureLabel;
 lv_obj_t * uic_MoistureGauge;
-lv_obj_t * uic_MoisturePercentageLabel;
 lv_obj_t * uic_SettingsButton;
 lv_obj_t * uic_MoistureScreenWifiIndicator;
+lv_obj_t * uic_MoisturePercentageLabel;
 
 
 // SCREEN: ui_SettingsScreen

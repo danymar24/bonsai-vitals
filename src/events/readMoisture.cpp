@@ -10,6 +10,6 @@ static void readMoisture()
     int formattedMoisture = map(moistureRead, wet, dry, 100, 0); // Convert the soil sensor reading to percentage
     
     lv_arc_set_value(ui_MoistureGauge, formattedMoisture);
-    lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%", formattedMoisture);
-    lv_label_set_text_fmt(ui_MoistureLabel, "Moisture: %d%", formattedMoisture);
+    lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%%", formattedMoisture);
+    lv_label_set_text_fmt(ui_MoistureLabel, "Moisture", formattedMoisture);
 } 
