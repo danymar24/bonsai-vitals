@@ -35,17 +35,28 @@ extern lv_obj_t * uic_MoistureScreenWifiIndicator;
 
 // SCREEN: ui_SettingsScreen
 void ui_SettingsScreen_screen_init(void);
+void ui_event_SettingsScreen(lv_event_t * e);
 extern lv_obj_t * ui_SettingsScreen;
 void ui_event_SettingsBackButton(lv_event_t * e);
 extern lv_obj_t * ui_SettingsBackButton;
 void ui_event_WiFiSettingsButton(lv_event_t * e);
 extern lv_obj_t * ui_WiFiSettingsButton;
 extern lv_obj_t * ui_WifiSettingsButtonLabel;
+void ui_event_ResetToFactoryButton(lv_event_t * e);
+extern lv_obj_t * ui_ResetToFactoryButton;
+extern lv_obj_t * ui_ResetToFactoryButtonLabel;
+void ui_event_ResetToFactoryConfirm(lv_event_t * e);
+extern lv_obj_t * ui_ResetToFactoryConfirm;
+extern lv_obj_t * ui_ResetToFactoryConfirmLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_SettingsScreen;
 extern lv_obj_t * uic_SettingsBackButton;
 extern lv_obj_t * uic_WiFiSettingsButton;
 extern lv_obj_t * uic_WifiSettingsButtonLabel;
+extern lv_obj_t * uic_ResetToFactoryButton;
+extern lv_obj_t * uic_ResetToFactoryButtonLabel;
+extern lv_obj_t * uic_ResetToFactoryConfirm;
+extern lv_obj_t * uic_ResetToFactoryConfirmLabel;
 
 // SCREEN: ui_WiFiScreen
 void ui_WiFiScreen_screen_init(void);

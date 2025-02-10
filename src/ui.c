@@ -29,17 +29,28 @@ lv_obj_t * uic_MoistureScreenWifiIndicator;
 
 // SCREEN: ui_SettingsScreen
 void ui_SettingsScreen_screen_init(void);
+void ui_event_SettingsScreen(lv_event_t * e);
 lv_obj_t * ui_SettingsScreen;
 void ui_event_SettingsBackButton(lv_event_t * e);
 lv_obj_t * ui_SettingsBackButton;
 void ui_event_WiFiSettingsButton(lv_event_t * e);
 lv_obj_t * ui_WiFiSettingsButton;
 lv_obj_t * ui_WifiSettingsButtonLabel;
+void ui_event_ResetToFactoryButton(lv_event_t * e);
+lv_obj_t * ui_ResetToFactoryButton;
+lv_obj_t * ui_ResetToFactoryButtonLabel;
+void ui_event_ResetToFactoryConfirm(lv_event_t * e);
+lv_obj_t * ui_ResetToFactoryConfirm;
+lv_obj_t * ui_ResetToFactoryConfirmLabel;
 // CUSTOM VARIABLES
 lv_obj_t * uic_SettingsScreen;
 lv_obj_t * uic_SettingsBackButton;
 lv_obj_t * uic_WiFiSettingsButton;
 lv_obj_t * uic_WifiSettingsButtonLabel;
+lv_obj_t * uic_ResetToFactoryButton;
+lv_obj_t * uic_ResetToFactoryButtonLabel;
+lv_obj_t * uic_ResetToFactoryConfirm;
+lv_obj_t * uic_ResetToFactoryConfirmLabel;
 
 
 // SCREEN: ui_WiFiScreen
@@ -95,6 +106,15 @@ void ui_event_SettingsButton(lv_event_t * e)
     }
 }
 
+void ui_event_SettingsScreen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_SCREEN_UNLOADED) {
+        _ui_flag_modify(ui_ResetToFactoryConfirm, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
 void ui_event_SettingsBackButton(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -110,6 +130,24 @@ void ui_event_WiFiSettingsButton(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(&ui_WiFiScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 250, 0, &ui_WiFiScreen_screen_init);
+    }
+}
+
+void ui_event_ResetToFactoryButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_flag_modify(ui_ResetToFactoryConfirm, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+
+void ui_event_ResetToFactoryConfirm(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        resetSettings(e);
     }
 }
 

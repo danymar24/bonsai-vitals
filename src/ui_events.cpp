@@ -52,3 +52,11 @@ void connectToWifi(lv_event_t * e)
 
 	WiFi.begin(network_ssid, password_value);
 }
+
+void resetSettings(lv_event_t * e)
+{
+	prefs.begin("bonsai-vitals", false);
+	prefs.clear();
+	prefs.end();
+	ESP.restart();
+}

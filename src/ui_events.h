@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+void resetSettings(lv_event_t * e);
 void scanWifiNetworks(lv_event_t * e);
 void connectToWifi(lv_event_t * e);
 
