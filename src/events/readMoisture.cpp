@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include "ui.h"
 
-const int dry = 3800; // value for dry sensor
+const int dry = 4095; // value for dry sensor
 const int wet = 2300; // value for wet sensor
 
 static void readMoisture()

@@ -28,4 +28,22 @@ The Soil sensor is connected to the pin 6, this can be changed in the `lv_config
 #define MOISTURE_SENSOR_PIN 6
 ```
 
+## Web
+
+A web version is available to view the vitals and configuration.
+
+### Development
+
+The web app is built using React, to start developing follow this steps:
+* `cd web`
+* `npm install`
+* `npm run start`
+* Go to the file `App.tsx` and modify it
+
+### Push files
+
+To push the files, go to the Platformio tab in VSCode > ESP-LCD > Platform > Upload Filesystem Image
+
+This steps will compile the React app and push it through SPIFFS.
+
 Based on the sample of [esp-arduino-libs/ESP32_Display_Panel](https://github.com/esp-arduino-libs/ESP32_Display_Panel)
