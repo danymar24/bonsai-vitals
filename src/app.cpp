@@ -16,6 +16,9 @@
 
 #include "./util/preferences.h"
 
+unsigned long previousMillis = 0;
+const long interval = 60000; // Verify sensor every 60 seconds
+
 void setup()
 {
     pinMode(MOISTURE_SENSOR_PIN, INPUT);
@@ -58,16 +61,24 @@ void setup()
     /* Release the mutex */
     lvgl_port_unlock();
 
+    readMoisture();
+
     Serial.println(title + " end");
 }
 
 void loop()
 {
     Serial.println("IDLE loop");
+    
+    unsigned long currentMillis = millis();
 
-    readMoisture();
+    if (currentMillis - previousMillis >= interval)
+    {
+        previousMillis = currentMillis;
+        readMoisture();
+    }
 
     getWifiStatus();
 
-    delay(1000);
+    delay(2);
 }
