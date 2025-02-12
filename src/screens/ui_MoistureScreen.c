@@ -12,22 +12,11 @@ void ui_MoistureScreen_screen_init(void)
     lv_obj_set_style_bg_color(ui_MoistureScreen, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_MoistureScreen, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_MoistureLabel = lv_label_create(ui_MoistureScreen);
-    lv_obj_set_width(ui_MoistureLabel, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_MoistureLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_MoistureLabel, 7);
-    lv_obj_set_y(ui_MoistureLabel, 179);
-    lv_obj_set_align(ui_MoistureLabel, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_MoistureLabel, "Moisture");
-    lv_obj_set_style_text_color(ui_MoistureLabel, lv_color_hex(0xCCCCCC), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_MoistureLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_MoistureLabel, &lv_font_montserrat_46, LV_PART_MAIN | LV_STATE_DEFAULT);
-
     ui_MoistureGauge = lv_arc_create(ui_MoistureScreen);
-    lv_obj_set_width(ui_MoistureGauge, 463);
-    lv_obj_set_height(ui_MoistureGauge, 459);
-    lv_obj_set_x(ui_MoistureGauge, 6);
-    lv_obj_set_y(ui_MoistureGauge, 14);
+    lv_obj_set_width(ui_MoistureGauge, 454);
+    lv_obj_set_height(ui_MoistureGauge, 455);
+    lv_obj_set_x(ui_MoistureGauge, 0);
+    lv_obj_set_y(ui_MoistureGauge, 7);
     lv_obj_set_align(ui_MoistureGauge, LV_ALIGN_CENTER);
     lv_arc_set_value(ui_MoistureGauge, 50);
     lv_arc_set_mode(ui_MoistureGauge, LV_ARC_MODE_REVERSE);
@@ -42,42 +31,52 @@ void ui_MoistureScreen_screen_init(void)
     lv_obj_set_style_bg_color(ui_MoistureGauge, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_MoistureGauge, 0, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_SettingsButton = lv_imgbtn_create(ui_MoistureScreen);
-    lv_imgbtn_set_src(ui_SettingsButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_cogwheel_png, NULL);
-    lv_obj_set_height(ui_SettingsButton, 64);
-    lv_obj_set_width(ui_SettingsButton, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_x(ui_SettingsButton, 344);
-    lv_obj_set_y(ui_SettingsButton, -183);
-    lv_obj_set_align(ui_SettingsButton, LV_ALIGN_CENTER);
+    ui_MoisturePercentageLabel = lv_label_create(ui_MoistureScreen);
+    lv_obj_set_width(ui_MoisturePercentageLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_MoisturePercentageLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_MoisturePercentageLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_MoisturePercentageLabel, "0%");
+    lv_obj_set_style_text_color(ui_MoisturePercentageLabel, lv_color_hex(0xE0E0E0), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_MoisturePercentageLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_MoisturePercentageLabel, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_MoistureLabel = lv_label_create(ui_MoistureScreen);
+    lv_obj_set_width(ui_MoistureLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_MoistureLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_MoistureLabel, -1);
+    lv_obj_set_y(ui_MoistureLabel, 163);
+    lv_obj_set_align(ui_MoistureLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_MoistureLabel, "Moisture");
+    lv_obj_set_style_text_color(ui_MoistureLabel, lv_color_hex(0xCFCFCF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_MoistureLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_MoistureLabel, &lv_font_montserrat_46, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_MoistureScreenWifiIndicator = lv_img_create(ui_MoistureScreen);
     lv_img_set_src(ui_MoistureScreenWifiIndicator, &ui_img_wifi_png);
     lv_obj_set_width(ui_MoistureScreenWifiIndicator, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_MoistureScreenWifiIndicator, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_MoistureScreenWifiIndicator, -374);
-    lv_obj_set_y(ui_MoistureScreenWifiIndicator, -214);
+    lv_obj_set_x(ui_MoistureScreenWifiIndicator, -360);
+    lv_obj_set_y(ui_MoistureScreenWifiIndicator, -198);
     lv_obj_set_align(ui_MoistureScreenWifiIndicator, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_MoisturePercentageLabel = lv_label_create(ui_MoistureScreen);
-    lv_obj_set_width(ui_MoisturePercentageLabel, 127);
-    lv_obj_set_height(ui_MoisturePercentageLabel, 50);
-    lv_obj_set_x(ui_MoisturePercentageLabel, 3);
-    lv_obj_set_y(ui_MoisturePercentageLabel, 1);
-    lv_obj_set_align(ui_MoisturePercentageLabel, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_MoisturePercentageLabel, "0%");
-    lv_obj_set_style_text_color(ui_MoisturePercentageLabel, lv_color_hex(0xCCCCCC), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_MoisturePercentageLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui_MoisturePercentageLabel, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_MoisturePercentageLabel, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_SettingsButton = lv_imgbtn_create(ui_MoistureScreen);
+    lv_imgbtn_set_src(ui_SettingsButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_cogwheel_png, NULL);
+    lv_imgbtn_set_src(ui_SettingsButton, LV_IMGBTN_STATE_PRESSED, NULL, &ui_img_cogwheel_png, NULL);
+    lv_obj_set_height(ui_SettingsButton, 64);
+    lv_obj_set_width(ui_SettingsButton, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_x(ui_SettingsButton, 350);
+    lv_obj_set_y(ui_SettingsButton, -190);
+    lv_obj_set_align(ui_SettingsButton, LV_ALIGN_CENTER);
 
     lv_obj_add_event_cb(ui_SettingsButton, ui_event_SettingsButton, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_MoistureScreen, ui_event_MoistureScreen, LV_EVENT_ALL, NULL);
     uic_MoistureScreen = ui_MoistureScreen;
-    uic_MoistureLabel = ui_MoistureLabel;
     uic_MoistureGauge = ui_MoistureGauge;
-    uic_SettingsButton = ui_SettingsButton;
-    uic_MoistureScreenWifiIndicator = ui_MoistureScreenWifiIndicator;
     uic_MoisturePercentageLabel = ui_MoisturePercentageLabel;
+    uic_MoistureLabel = ui_MoistureLabel;
+    uic_MoistureScreenWifiIndicator = ui_MoistureScreenWifiIndicator;
+    uic_SettingsButton = ui_SettingsButton;
 
 }

@@ -12,19 +12,20 @@ void ui_WiFiScreen_screen_init(void)
     lv_obj_set_style_bg_color(ui_WiFiScreen, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_WiFiScreen, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_SettingsScreenBackButton = lv_imgbtn_create(ui_WiFiScreen);
-    lv_imgbtn_set_src(ui_SettingsScreenBackButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_786474294, NULL);
-    lv_obj_set_height(ui_SettingsScreenBackButton, 64);
-    lv_obj_set_width(ui_SettingsScreenBackButton, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_x(ui_SettingsScreenBackButton, -327);
-    lv_obj_set_y(ui_SettingsScreenBackButton, -171);
-    lv_obj_set_align(ui_SettingsScreenBackButton, LV_ALIGN_CENTER);
+    ui_WifiScreenBackButton = lv_imgbtn_create(ui_WiFiScreen);
+    lv_imgbtn_set_src(ui_WifiScreenBackButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_786474294, NULL);
+    lv_imgbtn_set_src(ui_WifiScreenBackButton, LV_IMGBTN_STATE_PRESSED, NULL, &ui_img_786474294, NULL);
+    lv_obj_set_height(ui_WifiScreenBackButton, 64);
+    lv_obj_set_width(ui_WifiScreenBackButton, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_x(ui_WifiScreenBackButton, -352);
+    lv_obj_set_y(ui_WifiScreenBackButton, -191);
+    lv_obj_set_align(ui_WifiScreenBackButton, LV_ALIGN_CENTER);
 
     ui_ScanWifiNetworksButton = lv_btn_create(ui_WiFiScreen);
-    lv_obj_set_width(ui_ScanWifiNetworksButton, 282);
-    lv_obj_set_height(ui_ScanWifiNetworksButton, 50);
-    lv_obj_set_x(ui_ScanWifiNetworksButton, 235);
-    lv_obj_set_y(ui_ScanWifiNetworksButton, -186);
+    lv_obj_set_width(ui_ScanWifiNetworksButton, 321);
+    lv_obj_set_height(ui_ScanWifiNetworksButton, 63);
+    lv_obj_set_x(ui_ScanWifiNetworksButton, 209);
+    lv_obj_set_y(ui_ScanWifiNetworksButton, -176);
     lv_obj_set_align(ui_ScanWifiNetworksButton, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_ScanWifiNetworksButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_ScanWifiNetworksButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -36,12 +37,24 @@ void ui_WiFiScreen_screen_init(void)
     lv_label_set_text(ui_ScanWifiNetworksButtonLabel, "Scan Networks");
     lv_obj_set_style_text_font(ui_ScanWifiNetworksButtonLabel, &lv_font_montserrat_32, LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_ScanNetworksSpinner = lv_spinner_create(ui_ScanWifiNetworksButton, 1000, 90);
+    lv_obj_set_width(ui_ScanNetworksSpinner, 80);
+    lv_obj_set_height(ui_ScanNetworksSpinner, 53);
+    lv_obj_set_x(ui_ScanNetworksSpinner, 16);
+    lv_obj_set_y(ui_ScanNetworksSpinner, 0);
+    lv_obj_set_align(ui_ScanNetworksSpinner, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_ScanNetworksSpinner, LV_OBJ_FLAG_HIDDEN);     /// Flags
+    lv_obj_clear_flag(ui_ScanNetworksSpinner, LV_OBJ_FLAG_CLICKABLE);      /// Flags
+
+    lv_obj_set_style_arc_color(ui_ScanNetworksSpinner, lv_color_hex(0xFF7340), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_arc_opa(ui_ScanNetworksSpinner, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
     ui_WifiNetworksDropdown = lv_dropdown_create(ui_WiFiScreen);
     lv_dropdown_set_options(ui_WifiNetworksDropdown, "");
-    lv_obj_set_width(ui_WifiNetworksDropdown, 385);
+    lv_obj_set_width(ui_WifiNetworksDropdown, 413);
     lv_obj_set_height(ui_WifiNetworksDropdown, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_WifiNetworksDropdown, -1);
-    lv_obj_set_y(ui_WifiNetworksDropdown, -80);
+    lv_obj_set_x(ui_WifiNetworksDropdown, 2);
+    lv_obj_set_y(ui_WifiNetworksDropdown, -70);
     lv_obj_set_align(ui_WifiNetworksDropdown, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WifiNetworksDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_set_style_text_font(ui_WifiNetworksDropdown, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -49,70 +62,89 @@ void ui_WiFiScreen_screen_init(void)
     lv_obj_set_style_text_font(lv_dropdown_get_list(ui_WifiNetworksDropdown), &lv_font_montserrat_24,
                                LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_PasswordInput = lv_textarea_create(ui_WiFiScreen);
-    lv_obj_set_width(ui_PasswordInput, 385);
-    lv_obj_set_height(ui_PasswordInput, 51);
-    lv_obj_set_x(ui_PasswordInput, -1);
-    lv_obj_set_y(ui_PasswordInput, -19);
-    lv_obj_set_align(ui_PasswordInput, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_PasswordInput, "Password");
-    lv_textarea_set_password_mode(ui_PasswordInput, true);
-    lv_obj_set_style_text_font(ui_PasswordInput, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(lv_dropdown_get_list(ui_WifiNetworksDropdown), &lv_font_montserrat_24,
+                               LV_PART_SELECTED | LV_STATE_DEFAULT);
+
+    ui_WifiPasswordInput = lv_textarea_create(ui_WiFiScreen);
+    lv_obj_set_width(ui_WifiPasswordInput, 414);
+    lv_obj_set_height(ui_WifiPasswordInput, 52);
+    lv_obj_set_x(ui_WifiPasswordInput, 3);
+    lv_obj_set_y(ui_WifiPasswordInput, -3);
+    lv_obj_set_align(ui_WifiPasswordInput, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_WifiPasswordInput, "Password");
+    lv_textarea_set_password_mode(ui_WifiPasswordInput, true);
+    lv_obj_set_style_text_font(ui_WifiPasswordInput, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
 
 
     ui_ConnectToNetworkButton = lv_btn_create(ui_WiFiScreen);
-    lv_obj_set_width(ui_ConnectToNetworkButton, 179);
-    lv_obj_set_height(ui_ConnectToNetworkButton, 50);
-    lv_obj_set_x(ui_ConnectToNetworkButton, -2);
-    lv_obj_set_y(ui_ConnectToNetworkButton, 51);
+    lv_obj_set_width(ui_ConnectToNetworkButton, 283);
+    lv_obj_set_height(ui_ConnectToNetworkButton, 52);
+    lv_obj_set_x(ui_ConnectToNetworkButton, 1);
+    lv_obj_set_y(ui_ConnectToNetworkButton, 66);
     lv_obj_set_align(ui_ConnectToNetworkButton, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_ConnectToNetworkButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_ConnectToNetworkButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    ui_ConnectToNetworkSpinner = lv_spinner_create(ui_ConnectToNetworkButton, 1000, 90);
+    lv_obj_set_width(ui_ConnectToNetworkSpinner, 80);
+    lv_obj_set_height(ui_ConnectToNetworkSpinner, 44);
+    lv_obj_set_x(ui_ConnectToNetworkSpinner, 24);
+    lv_obj_set_y(ui_ConnectToNetworkSpinner, 0);
+    lv_obj_set_align(ui_ConnectToNetworkSpinner, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_ConnectToNetworkSpinner, LV_OBJ_FLAG_HIDDEN);     /// Flags
+    lv_obj_clear_flag(ui_ConnectToNetworkSpinner, LV_OBJ_FLAG_CLICKABLE);      /// Flags
+
+    lv_obj_set_style_arc_color(ui_ConnectToNetworkSpinner, lv_color_hex(0xFF7340), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_arc_opa(ui_ConnectToNetworkSpinner, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
     ui_ConnectToNetworkButtonLabel = lv_label_create(ui_ConnectToNetworkButton);
     lv_obj_set_width(ui_ConnectToNetworkButtonLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_ConnectToNetworkButtonLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_ConnectToNetworkButtonLabel, -1);
-    lv_obj_set_y(ui_ConnectToNetworkButtonLabel, -1);
     lv_obj_set_align(ui_ConnectToNetworkButtonLabel, LV_ALIGN_CENTER);
     lv_label_set_text(ui_ConnectToNetworkButtonLabel, "Connect");
     lv_obj_set_style_text_font(ui_ConnectToNetworkButtonLabel, &lv_font_montserrat_32, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_PasswordKeyboard = lv_keyboard_create(ui_WiFiScreen);
-    lv_obj_set_width(ui_PasswordKeyboard, 796);
-    lv_obj_set_height(ui_PasswordKeyboard, -18);
-    lv_obj_set_x(ui_PasswordKeyboard, 1);
-    lv_obj_set_y(ui_PasswordKeyboard, 124);
-    lv_obj_set_align(ui_PasswordKeyboard, LV_ALIGN_CENTER);
+    ui_WifiKeyboard = lv_keyboard_create(ui_WiFiScreen);
+    lv_obj_set_width(ui_WifiKeyboard, 800);
+    lv_obj_set_height(ui_WifiKeyboard, 211);
+    lv_obj_set_x(ui_WifiKeyboard, 0);
+    lv_obj_set_y(ui_WifiKeyboard, 134);
+    lv_obj_set_align(ui_WifiKeyboard, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_WifiKeyboard, LV_OBJ_FLAG_HIDDEN);     /// Flags
+    lv_obj_set_style_bg_color(ui_WifiKeyboard, lv_color_hex(0x464646), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_WifiKeyboard, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_text_font(ui_PasswordKeyboard, &lv_font_montserrat_32, LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_WifiKeyboard, lv_color_hex(0xCACACA), LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_WifiKeyboard, 255, LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_WifiKeyboard, &lv_font_montserrat_32, LV_PART_ITEMS | LV_STATE_DEFAULT);
 
     ui_ConnectedNetworkLabel = lv_label_create(ui_WiFiScreen);
     lv_obj_set_width(ui_ConnectedNetworkLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_ConnectedNetworkLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_ConnectedNetworkLabel, 207);
-    lv_obj_set_y(ui_ConnectedNetworkLabel, -124);
+    lv_obj_set_x(ui_ConnectedNetworkLabel, 195);
+    lv_obj_set_y(ui_ConnectedNetworkLabel, -121);
     lv_obj_set_align(ui_ConnectedNetworkLabel, LV_ALIGN_LEFT_MID);
     lv_label_set_text(ui_ConnectedNetworkLabel, "");
-    lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xE7E7E7), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xEAEAEA), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_ConnectedNetworkLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui_ConnectedNetworkLabel, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_event_cb(ui_SettingsScreenBackButton, ui_event_SettingsScreenBackButton, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_WifiScreenBackButton, ui_event_WifiScreenBackButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ScanWifiNetworksButton, ui_event_ScanWifiNetworksButton, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_PasswordInput, ui_event_PasswordInput, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_WifiPasswordInput, ui_event_WifiPasswordInput, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ConnectToNetworkButton, ui_event_ConnectToNetworkButton, LV_EVENT_ALL, NULL);
-    lv_keyboard_set_textarea(ui_PasswordKeyboard, ui_PasswordInput);
+    lv_obj_add_event_cb(ui_WiFiScreen, ui_event_WiFiScreen, LV_EVENT_ALL, NULL);
     uic_WiFiScreen = ui_WiFiScreen;
-    uic_SettingsScreenBackButton = ui_SettingsScreenBackButton;
+    uic_WifiScreenBackButton = ui_WifiScreenBackButton;
     uic_ScanWifiNetworksButton = ui_ScanWifiNetworksButton;
     uic_ScanWifiNetworksButtonLabel = ui_ScanWifiNetworksButtonLabel;
+    uic_ScanNetworksSpinner = ui_ScanNetworksSpinner;
     uic_WifiNetworksDropdown = ui_WifiNetworksDropdown;
-    uic_PasswordInput = ui_PasswordInput;
+    uic_WifiPasswordInput = ui_WifiPasswordInput;
     uic_ConnectToNetworkButton = ui_ConnectToNetworkButton;
+    uic_ConnectToNetworkSpinner = ui_ConnectToNetworkSpinner;
     uic_ConnectToNetworkButtonLabel = ui_ConnectToNetworkButtonLabel;
-    uic_PasswordKeyboard = ui_PasswordKeyboard;
+    uic_WifiKeyboard = ui_WifiKeyboard;
     uic_ConnectedNetworkLabel = ui_ConnectedNetworkLabel;
 
 }

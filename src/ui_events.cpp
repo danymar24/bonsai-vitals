@@ -9,29 +9,37 @@
 
 void scanWifiNetworks(lv_event_t * e)
 {
+    lv_obj_clear_flag(ui_ScanNetworksSpinner, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(ui_ScanWifiNetworksButtonLabel, LV_OBJ_FLAG_HIDDEN);
+
 	int n = WiFi.scanNetworks();
-    Serial.println("Scan done");
+    Serial2.println("Scan done");
     if (n == 0)
     {
-        Serial.println("no networks found");
+        Serial2.println("no networks found");
+        lv_obj_clear_flag(ui_ScanWifiNetworksButtonLabel, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(ui_ScanNetworksSpinner, LV_OBJ_FLAG_HIDDEN);
     }
     else
     {
         String networksFound = "";
 
-        Serial.print(n);
-        Serial.println(" networks found");
-        Serial.println("Nr | SSID                             | RSSI | CH | Encryption");
+        Serial2.print(n);
+        Serial2.println(" networks found");
+        Serial2.println("Nr | SSID                             | RSSI | CH | Encryption");
         for (int i = 0; i < n; ++i)
         {
             // Print SSID and RSSI for each network found
             networksFound = networksFound + "\n" + WiFi.SSID(i).c_str();
-            Serial.printf("%-32.32s", WiFi.SSID(i).c_str());
+            Serial2.printf("%-32.32s", WiFi.SSID(i).c_str());
         }
 
         lv_dropdown_set_options(ui_WifiNetworksDropdown, networksFound.c_str());
-
+        lv_obj_clear_flag(ui_ScanWifiNetworksButtonLabel, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(ui_ScanNetworksSpinner, LV_OBJ_FLAG_HIDDEN);
     }
+
+
 }
 
 void connectToWifi(lv_event_t * e)
@@ -39,18 +47,43 @@ void connectToWifi(lv_event_t * e)
 	char network_ssid[64];
     lv_dropdown_get_selected_str(ui_WifiNetworksDropdown, network_ssid, sizeof(network_ssid));
     
-    const char *password_value = lv_textarea_get_text(ui_PasswordInput);
+    const char *password_value = lv_textarea_get_text(ui_WifiPasswordInput);
     
 	// Save network ssid and password to preferences
-	Serial.print(network_ssid);
-	Serial.print(password_value);
+	Serial2.print(network_ssid);
+	Serial2.print(password_value);
 
-	prefs.begin("bonsai-vitals", false);
-	prefs.putString("ssid", network_ssid);
-	prefs.putString("password", password_value);
-	prefs.end();
+    lv_label_set_text(ui_ConnectedNetworkLabel, "Connecting...");
 
 	WiFi.begin(network_ssid, password_value);
+
+    unsigned long timeout = 0;
+    timeout = millis();
+    while ((WiFi.status() != WL_CONNECTED) && (millis() - timeout < 8000))
+    {
+        Serial2.print(".");
+        delay(100);
+    }
+
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        Serial2.print("Saving wifi credentials");
+        prefs.begin("bonsai-vitals", false);
+        prefs.putString("ssid", network_ssid);
+        prefs.putString("password", password_value);
+        prefs.end();
+
+        String connectedWifi = "Connected to: " + WiFi.SSID() + " (IP: " + WiFi.localIP().toString() + ")";
+        lv_label_set_text(ui_ConnectedNetworkLabel, connectedWifi.c_str());
+        lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xEAEAEA), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_clear_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN);
+
+    } else if (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_NO_SSID_AVAIL)
+    {
+        Serial2.println("Password is not correct");
+        lv_label_set_text(ui_ConnectedNetworkLabel, "Incorrect password.");
+        lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
 }
 
 void resetSettings(lv_event_t * e)
@@ -59,4 +92,56 @@ void resetSettings(lv_event_t * e)
 	prefs.clear();
 	prefs.end();
 	ESP.restart();
+}
+
+void getWifiStatus(lv_event_t * e = NULL)
+{
+
+    if (WiFi.status() != WL_CONNECTED && WiFi.status() == WL_NO_SSID_AVAIL)
+    {
+        Serial2.println("Wifi network is not avaliable");
+        lv_label_set_text(ui_ConnectedNetworkLabel, "Wifi network is not avaliable.");
+        lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+    else if (WiFi.status() == WL_CONNECTED)
+    {
+        String connectedWifi = "Connected to: " + WiFi.SSID() + " (IP: " + WiFi.localIP().toString() + ")";
+        Serial2.println(connectedWifi);
+        lv_label_set_text(ui_ConnectedNetworkLabel, connectedWifi.c_str());
+        lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xEAEAEA), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_clear_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN); /// Flags
+    }
+}
+
+void readMoisture(lv_event_t * e)
+{
+
+    const int dry = 4095; // value for dry sensor
+    const int wet = 2300; // value for wet sensor
+
+    int moistureRead = analogRead(MOISTURE_SENSOR_PIN);
+    int formattedMoisture = map(moistureRead, wet, dry, 100, 0); // Convert the soil sensor reading to percentage
+
+    lv_arc_set_value(ui_MoistureGauge, formattedMoisture);
+    lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%%", formattedMoisture);
+    lv_label_set_text_fmt(ui_MoistureLabel, "Moisture", formattedMoisture);
+
+}
+
+void youreverysecfunc(lv_timer_t * timer) {
+    if(lv_disp_get_inactive_time(NULL) > 5000 )  //for 5 sec
+    {
+        lv_obj_t * activeScreen = lv_scr_act();
+        if(lv_disp_get_inactive_time(NULL) > 60000 && activeScreen != ui_MoistureScreen)  //for 1 min
+        {
+            Serial2.print("iddle");
+            _ui_screen_change(&ui_MoistureScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_MoistureScreen_screen_init);
+        }
+    }
+}
+
+void SetInactivityTimer(lv_event_t * e)
+{
+    Serial2.print("setting iddle timer");
+    lv_timer_t * timer = lv_timer_create(youreverysecfunc, 1000,  NULL);
 }

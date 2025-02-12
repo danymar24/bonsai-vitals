@@ -11,12 +11,10 @@
 #include "WiFi.h"
 
 #include "./ui.h"
-#include "./events/events.h"
 
 #include "./util/preferences.h"
 #include <SPIFFS.h>
 #include "./util/asyncWebServer.h"
-
 
 unsigned long previousMillis = 0;
 const long interval = 60000; // Verify sensor every 60 seconds
@@ -36,8 +34,10 @@ void notFound(AsyncWebServerRequest *request)
 void setup()
 {
     pinMode(MOISTURE_SENSOR_PIN, INPUT);
-
     prefs.begin("bonsai-vitals", false);
+    String title = "Bonsai Vitals";
+    Serial2.begin(115200, SERIAL_8N1, 44, 43);
+    Serial2.println(title + " start");
 
     String network_ssid = prefs.getString("ssid");
     String password_value = prefs.getString("password");
@@ -48,34 +48,30 @@ void setup()
 
     if (network_ssid == "" && password_value == "")
     {
-        Serial.print("No wifi credentials");
+        Serial2.print("No wifi credentials");
     }
     else
     {
         WiFi.begin(network_ssid.c_str(), password_value.c_str());
     }
 
-    String title = "Bonsai Vitals";
-
-    Serial.begin(115200);
-    Serial.println(title + " start");
 
     if (!SPIFFS.begin(true))
     {
-        Serial.println("An Error has occurred while mounting SPIFFS");
+        Serial2.println("An Error has occurred while mounting SPIFFS");
         return;
     }
 
-    Serial.println("Initialize panel device");
+    Serial2.println("Initialize panel device");
     ESP_Panel *panel = new ESP_Panel();
     panel->init();
 
     panel->begin();
 
-    Serial.println("Initialize LVGL");
+    Serial2.println("Initialize LVGL");
     lvgl_port_init(panel->getLcd(), panel->getTouch());
 
-    Serial.println("Create UI");
+    Serial2.println("Create UI");
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
     lvgl_port_lock(-1);
 
@@ -83,8 +79,6 @@ void setup()
 
     /* Release the mutex */
     lvgl_port_unlock();
-
-    readMoisture();
 
     /**
      * Web server requirements
@@ -98,22 +92,18 @@ void setup()
     server.onNotFound(notFound);
     server.begin();
 
-    Serial.println(title + " end");
+    Serial2.println(title + " end");
 }
 
 void loop()
 {
-    Serial.println("IDLE loop");
-
     unsigned long currentMillis = millis();
 
     if (currentMillis - previousMillis >= interval)
     {
         previousMillis = currentMillis;
-        readMoisture();
+        readMoisture(NULL);
     }
-
-    getWifiStatus();
 
     delay(2);
 }

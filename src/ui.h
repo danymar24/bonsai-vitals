@@ -18,20 +18,21 @@ extern "C" {
 
 // SCREEN: ui_MoistureScreen
 void ui_MoistureScreen_screen_init(void);
+void ui_event_MoistureScreen(lv_event_t * e);
 extern lv_obj_t * ui_MoistureScreen;
-extern lv_obj_t * ui_MoistureLabel;
 extern lv_obj_t * ui_MoistureGauge;
+extern lv_obj_t * ui_MoisturePercentageLabel;
+extern lv_obj_t * ui_MoistureLabel;
+extern lv_obj_t * ui_MoistureScreenWifiIndicator;
 void ui_event_SettingsButton(lv_event_t * e);
 extern lv_obj_t * ui_SettingsButton;
-extern lv_obj_t * ui_MoistureScreenWifiIndicator;
-extern lv_obj_t * ui_MoisturePercentageLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_MoistureScreen;
-extern lv_obj_t * uic_MoistureLabel;
 extern lv_obj_t * uic_MoistureGauge;
-extern lv_obj_t * uic_SettingsButton;
-extern lv_obj_t * uic_MoistureScreenWifiIndicator;
 extern lv_obj_t * uic_MoisturePercentageLabel;
+extern lv_obj_t * uic_MoistureLabel;
+extern lv_obj_t * uic_MoistureScreenWifiIndicator;
+extern lv_obj_t * uic_SettingsButton;
 
 // SCREEN: ui_SettingsScreen
 void ui_SettingsScreen_screen_init(void);
@@ -41,60 +42,66 @@ void ui_event_SettingsBackButton(lv_event_t * e);
 extern lv_obj_t * ui_SettingsBackButton;
 void ui_event_WiFiSettingsButton(lv_event_t * e);
 extern lv_obj_t * ui_WiFiSettingsButton;
-extern lv_obj_t * ui_WifiSettingsButtonLabel;
+extern lv_obj_t * ui_WiFiSettingsButtonLabel;
 void ui_event_ResetToFactoryButton(lv_event_t * e);
 extern lv_obj_t * ui_ResetToFactoryButton;
 extern lv_obj_t * ui_ResetToFactoryButtonLabel;
-void ui_event_ResetToFactoryConfirm(lv_event_t * e);
-extern lv_obj_t * ui_ResetToFactoryConfirm;
-extern lv_obj_t * ui_ResetToFactoryConfirmLabel;
+void ui_event_ResetToFactoryConfirmButton(lv_event_t * e);
+extern lv_obj_t * ui_ResetToFactoryConfirmButton;
+extern lv_obj_t * ui_ResetToFactoryConfirmButtonLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_SettingsScreen;
 extern lv_obj_t * uic_SettingsBackButton;
 extern lv_obj_t * uic_WiFiSettingsButton;
-extern lv_obj_t * uic_WifiSettingsButtonLabel;
+extern lv_obj_t * uic_WiFiSettingsButtonLabel;
 extern lv_obj_t * uic_ResetToFactoryButton;
 extern lv_obj_t * uic_ResetToFactoryButtonLabel;
-extern lv_obj_t * uic_ResetToFactoryConfirm;
-extern lv_obj_t * uic_ResetToFactoryConfirmLabel;
+extern lv_obj_t * uic_ResetToFactoryConfirmButton;
+extern lv_obj_t * uic_ResetToFactoryConfirmButtonLabel;
 
 // SCREEN: ui_WiFiScreen
 void ui_WiFiScreen_screen_init(void);
+void ui_event_WiFiScreen(lv_event_t * e);
 extern lv_obj_t * ui_WiFiScreen;
-void ui_event_SettingsScreenBackButton(lv_event_t * e);
-extern lv_obj_t * ui_SettingsScreenBackButton;
+void ui_event_WifiScreenBackButton(lv_event_t * e);
+extern lv_obj_t * ui_WifiScreenBackButton;
 void ui_event_ScanWifiNetworksButton(lv_event_t * e);
 extern lv_obj_t * ui_ScanWifiNetworksButton;
 extern lv_obj_t * ui_ScanWifiNetworksButtonLabel;
+extern lv_obj_t * ui_ScanNetworksSpinner;
 extern lv_obj_t * ui_WifiNetworksDropdown;
-void ui_event_PasswordInput(lv_event_t * e);
-extern lv_obj_t * ui_PasswordInput;
+void ui_event_WifiPasswordInput(lv_event_t * e);
+extern lv_obj_t * ui_WifiPasswordInput;
 void ui_event_ConnectToNetworkButton(lv_event_t * e);
 extern lv_obj_t * ui_ConnectToNetworkButton;
+extern lv_obj_t * ui_ConnectToNetworkSpinner;
 extern lv_obj_t * ui_ConnectToNetworkButtonLabel;
-extern lv_obj_t * ui_PasswordKeyboard;
+extern lv_obj_t * ui_WifiKeyboard;
 extern lv_obj_t * ui_ConnectedNetworkLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_WiFiScreen;
-extern lv_obj_t * uic_SettingsScreenBackButton;
+extern lv_obj_t * uic_WifiScreenBackButton;
 extern lv_obj_t * uic_ScanWifiNetworksButton;
 extern lv_obj_t * uic_ScanWifiNetworksButtonLabel;
+extern lv_obj_t * uic_ScanNetworksSpinner;
 extern lv_obj_t * uic_WifiNetworksDropdown;
-extern lv_obj_t * uic_PasswordInput;
+extern lv_obj_t * uic_WifiPasswordInput;
 extern lv_obj_t * uic_ConnectToNetworkButton;
+extern lv_obj_t * uic_ConnectToNetworkSpinner;
 extern lv_obj_t * uic_ConnectToNetworkButtonLabel;
-extern lv_obj_t * uic_PasswordKeyboard;
+extern lv_obj_t * uic_WifiKeyboard;
 extern lv_obj_t * uic_ConnectedNetworkLabel;
 
 // EVENTS
 
+void ui_event____initial_actions0(lv_event_t * e);
 extern lv_obj_t * ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
 LV_IMG_DECLARE(ui_img_gauge_png);    // assets/gauge.png
 LV_IMG_DECLARE(ui_img_1588936248);    // assets/gauge-solid.png
-LV_IMG_DECLARE(ui_img_cogwheel_png);    // assets/cogwheel.png
 LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
+LV_IMG_DECLARE(ui_img_cogwheel_png);    // assets/cogwheel.png
 LV_IMG_DECLARE(ui_img_786474294);    // assets/back-arrow.png
 
 // UI INIT

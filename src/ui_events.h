@@ -10,6 +10,9 @@
 extern "C" {
 #endif
 
+void SetInactivityTimer(lv_event_t * e);
+void getWifiStatus(lv_event_t * e);
+void readMoisture(lv_event_t * e);
 void resetSettings(lv_event_t * e);
 void scanWifiNetworks(lv_event_t * e);
 void connectToWifi(lv_event_t * e);
