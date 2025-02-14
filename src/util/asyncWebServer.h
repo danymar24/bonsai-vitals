@@ -1,8 +1,9 @@
 #ifndef ASYNC_WEB_SERVER_H
 #define ASYNC_WEB_SERVER_H
 
-#include <ESPAsyncWebServer.h>
+void initWebSocket();
+void initWebServer();
+void notifyClients(String name, String type, String value);
 
-AsyncWebServer server(80);
 
 #endif

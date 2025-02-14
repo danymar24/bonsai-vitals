@@ -6,6 +6,8 @@
 #include "ui.h"
 #include <WiFi.h>
 #include "./util/preferences.h"
+#include "./util/readMoistureSensor.h"
+#include "./util/asyncWebServer.h"
 
 void scanWifiNetworks(lv_event_t * e)
 {
@@ -115,33 +117,48 @@ void getWifiStatus(lv_event_t * e = NULL)
 
 void readMoisture(lv_event_t * e)
 {
-
-    const int dry = 4095; // value for dry sensor
-    const int wet = 2300; // value for wet sensor
-
-    int moistureRead = analogRead(MOISTURE_SENSOR_PIN);
-    int formattedMoisture = map(moistureRead, wet, dry, 100, 0); // Convert the soil sensor reading to percentage
+    int formattedMoisture = readMoistureSensor();
 
     lv_arc_set_value(ui_MoistureGauge, formattedMoisture);
     lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%%", formattedMoisture);
     lv_label_set_text_fmt(ui_MoistureLabel, "Moisture", formattedMoisture);
+    notifyClients("moisture", "percentage", String(formattedMoisture));
+}
+
+void redirectToMoistureScreen()
+{
+    lv_obj_t * activeScreen = lv_scr_act();
+    if(lv_disp_get_inactive_time(NULL) > ONE_MINUTE && activeScreen != ui_MoistureScreen)  //for 1 min
+    {
+        Serial2.print("iddle");
+        _ui_screen_change(&ui_MoistureScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_MoistureScreen_screen_init);
+    }
+}
+
+void turnOnWifiIndicator()
+{
+    if(WiFi.status() != WL_CONNECTED){
+        lv_obj_add_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    } else {
+        lv_obj_clear_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    }
+}
+
+void oneSecondTimerEvent(lv_timer_t * timer) 
+{
+    redirectToMoistureScreen();
+    turnOnWifiIndicator();
 
 }
 
-void youreverysecfunc(lv_timer_t * timer) {
-    if(lv_disp_get_inactive_time(NULL) > 5000 )  //for 5 sec
-    {
-        lv_obj_t * activeScreen = lv_scr_act();
-        if(lv_disp_get_inactive_time(NULL) > 60000 && activeScreen != ui_MoistureScreen)  //for 1 min
-        {
-            Serial2.print("iddle");
-            _ui_screen_change(&ui_MoistureScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_MoistureScreen_screen_init);
-        }
-    }
+void oneMinuteTimerEvent(lv_timer_t * timer)
+{
+    readMoisture(NULL);
 }
 
 void SetInactivityTimer(lv_event_t * e)
 {
     Serial2.print("setting iddle timer");
-    lv_timer_t * timer = lv_timer_create(youreverysecfunc, 1000,  NULL);
+    lv_timer_t * oneSecondTimer = lv_timer_create(oneSecondTimerEvent, ONE_SECOND,  NULL);
+    lv_timer_t * oneMinuteTimer = lv_timer_create(oneMinuteTimerEvent, ONE_MINUTE,  NULL);
 }

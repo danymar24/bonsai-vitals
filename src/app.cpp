@@ -16,21 +16,6 @@
 #include <SPIFFS.h>
 #include "./util/asyncWebServer.h"
 
-unsigned long previousMillis = 0;
-const long interval = 60000; // Verify sensor every 60 seconds
-
-void notFound(AsyncWebServerRequest *request)
-{
-  if (request->method() == HTTP_OPTIONS)
-  {
-    request->send(200);
-  }
-  else
-  {
-    request->send(404, "application/json", "{\"message\":\"Not found\"}");
-  }
-}
-
 void setup()
 {
     pinMode(MOISTURE_SENSOR_PIN, INPUT);
@@ -80,30 +65,14 @@ void setup()
     /* Release the mutex */
     lvgl_port_unlock();
 
-    /**
-     * Web server requirements
-     */
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT");
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
-    server.serveStatic("/static/", SPIFFS, "/");
-    server.onNotFound(notFound);
-    server.begin();
+    initWebServer();
+    initWebSocket();
 
     Serial2.println(title + " end");
 }
 
 void loop()
 {
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previousMillis >= interval)
-    {
-        previousMillis = currentMillis;
-        readMoisture(NULL);
-    }
-
     delay(2);
 }

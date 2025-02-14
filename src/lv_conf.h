@@ -24,6 +24,9 @@
 
 #define MOISTURE_SENSOR_PIN 6
 
+#define ONE_MINUTE 60000
+#define ONE_SECOND 1000
+
 /* Log settings */
 #define USE_LV_LOG      1   /* Enable/disable the log module */
 #define LV_USE_LOG      1   /* Enable/disable the log module */
