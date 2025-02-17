@@ -1,6 +1,7 @@
 screens/ui_MoistureScreen.c
 screens/ui_SettingsScreen.c
 screens/ui_WiFiScreen.c
+screens/ui_TimeScreen.c
 ui.c
 components/ui_comp_hook.c
 ui_helpers.c

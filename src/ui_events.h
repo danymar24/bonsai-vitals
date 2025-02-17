@@ -16,6 +16,8 @@ void readMoisture(lv_event_t * e);
 void resetSettings(lv_event_t * e);
 void scanWifiNetworks(lv_event_t * e);
 void connectToWifi(lv_event_t * e);
+void onTimeScreenLoaded(lv_event_t * e);
+void syncTime(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

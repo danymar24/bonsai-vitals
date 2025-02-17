@@ -109,6 +109,7 @@ void getWifiStatus(lv_event_t * e = NULL)
     {
         String connectedWifi = "Connected to: " + WiFi.SSID() + " (IP: " + WiFi.localIP().toString() + ")";
         Serial2.println(connectedWifi);
+        syncTime(NULL);
         lv_label_set_text(ui_ConnectedNetworkLabel, connectedWifi.c_str());
         lv_obj_set_style_text_color(ui_ConnectedNetworkLabel, lv_color_hex(0xEAEAEA), LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_clear_flag(ui_MoistureScreenWifiIndicator, LV_OBJ_FLAG_HIDDEN); /// Flags
@@ -144,11 +145,42 @@ void turnOnWifiIndicator()
     }
 }
 
+void getCurrentTime()
+{
+    time_t now;
+    char strftime_buf[64];
+    struct tm timeinfo;
+
+    time(&now);
+    tzset();
+
+    localtime_r(&now, &timeinfo);
+    strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
+    lv_label_set_text(ui_TimeLabel, strftime_buf);
+
+}
+
+void turnOffBacklight()
+{
+    time_t now;
+    char strftime_buf[64];
+    struct tm timeinfo;
+
+    time(&now);
+    tzset();
+
+    localtime_r(&now, &timeinfo);
+
+    if(timeinfo.tm_hour > 20 && timeinfo.tm_hour < 8) {
+        //@todo do something to turn off the screen
+    }
+}
+
 void oneSecondTimerEvent(lv_timer_t * timer) 
 {
     redirectToMoistureScreen();
     turnOnWifiIndicator();
-
+    getCurrentTime();
 }
 
 void oneMinuteTimerEvent(lv_timer_t * timer)
@@ -161,4 +193,37 @@ void SetInactivityTimer(lv_event_t * e)
     Serial2.print("setting iddle timer");
     lv_timer_t * oneSecondTimer = lv_timer_create(oneSecondTimerEvent, ONE_SECOND,  NULL);
     lv_timer_t * oneMinuteTimer = lv_timer_create(oneMinuteTimerEvent, ONE_MINUTE,  NULL);
+}
+
+void syncTime(lv_event_t * e)
+{
+    tm myTimeInfo;
+    time_t now;
+    const long gmtOffset_sec = -21600;
+
+    const int daylightOffset_sec = 3600;
+    const char* ntpServer = "time.google.com";
+
+    Serial2.print("configTime uses ntpServer ");
+    Serial2.println();
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+    Serial2.print("synchronizing time");
+    
+    while (myTimeInfo.tm_year + 1900 < 2000 ) {
+        time(&now);                       // read the current time
+        localtime_r(&now, &myTimeInfo);
+        delay(100);
+        Serial2.print(".");
+    }
+    Serial2.print(now);
+    onTimeScreenLoaded(NULL);
+    Serial2.print("\n time synchronsized \n");
+}
+
+void onTimeScreenLoaded(lv_event_t * e)
+{
+	if(WiFi.status() == WL_CONNECTED) {
+        lv_obj_add_flag(ui_ConnectToWifiSync, LV_OBJ_FLAG_HIDDEN);     /// Flags
+        lv_obj_clear_state(ui_SyncTimeButton, LV_STATE_DISABLED); 
+    }
 }

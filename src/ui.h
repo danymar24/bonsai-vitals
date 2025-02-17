@@ -49,6 +49,9 @@ extern lv_obj_t * ui_ResetToFactoryButtonLabel;
 void ui_event_ResetToFactoryConfirmButton(lv_event_t * e);
 extern lv_obj_t * ui_ResetToFactoryConfirmButton;
 extern lv_obj_t * ui_ResetToFactoryConfirmButtonLabel;
+void ui_event_TimeSettingsButton(lv_event_t * e);
+extern lv_obj_t * ui_TimeSettingsButton;
+extern lv_obj_t * ui_TimeSettingsButtonLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_SettingsScreen;
 extern lv_obj_t * uic_SettingsBackButton;
@@ -58,6 +61,8 @@ extern lv_obj_t * uic_ResetToFactoryButton;
 extern lv_obj_t * uic_ResetToFactoryButtonLabel;
 extern lv_obj_t * uic_ResetToFactoryConfirmButton;
 extern lv_obj_t * uic_ResetToFactoryConfirmButtonLabel;
+extern lv_obj_t * uic_TimeSettingsButton;
+extern lv_obj_t * uic_TimeSettingsButtonLabel;
 
 // SCREEN: ui_WiFiScreen
 void ui_WiFiScreen_screen_init(void);
@@ -91,6 +96,24 @@ extern lv_obj_t * uic_ConnectToNetworkSpinner;
 extern lv_obj_t * uic_ConnectToNetworkButtonLabel;
 extern lv_obj_t * uic_WifiKeyboard;
 extern lv_obj_t * uic_ConnectedNetworkLabel;
+
+// SCREEN: ui_TimeScreen
+void ui_TimeScreen_screen_init(void);
+void ui_event_TimeScreen(lv_event_t * e);
+extern lv_obj_t * ui_TimeScreen;
+void ui_event_WifiScreenBackButton2(lv_event_t * e);
+extern lv_obj_t * ui_WifiScreenBackButton2;
+extern lv_obj_t * ui_TimeLabel;
+void ui_event_SyncTimeButton(lv_event_t * e);
+extern lv_obj_t * ui_SyncTimeButton;
+extern lv_obj_t * ui_SyncTimeButtonLabel;
+extern lv_obj_t * ui_ConnectToWifiSync;
+// CUSTOM VARIABLES
+extern lv_obj_t * uic_TimeScreen;
+extern lv_obj_t * uic_WifiScreenBackButton;
+extern lv_obj_t * uic_TimeLabel;
+extern lv_obj_t * uic_SyncTimeButtonLabel;
+extern lv_obj_t * uic_ConnectToWifiSync;
 
 // EVENTS
 

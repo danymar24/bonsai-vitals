@@ -43,6 +43,9 @@ lv_obj_t * ui_ResetToFactoryButtonLabel;
 void ui_event_ResetToFactoryConfirmButton(lv_event_t * e);
 lv_obj_t * ui_ResetToFactoryConfirmButton;
 lv_obj_t * ui_ResetToFactoryConfirmButtonLabel;
+void ui_event_TimeSettingsButton(lv_event_t * e);
+lv_obj_t * ui_TimeSettingsButton;
+lv_obj_t * ui_TimeSettingsButtonLabel;
 // CUSTOM VARIABLES
 lv_obj_t * uic_SettingsScreen;
 lv_obj_t * uic_SettingsBackButton;
@@ -52,6 +55,8 @@ lv_obj_t * uic_ResetToFactoryButton;
 lv_obj_t * uic_ResetToFactoryButtonLabel;
 lv_obj_t * uic_ResetToFactoryConfirmButton;
 lv_obj_t * uic_ResetToFactoryConfirmButtonLabel;
+lv_obj_t * uic_TimeSettingsButton;
+lv_obj_t * uic_TimeSettingsButtonLabel;
 
 
 // SCREEN: ui_WiFiScreen
@@ -86,6 +91,25 @@ lv_obj_t * uic_ConnectToNetworkSpinner;
 lv_obj_t * uic_ConnectToNetworkButtonLabel;
 lv_obj_t * uic_WifiKeyboard;
 lv_obj_t * uic_ConnectedNetworkLabel;
+
+
+// SCREEN: ui_TimeScreen
+void ui_TimeScreen_screen_init(void);
+void ui_event_TimeScreen(lv_event_t * e);
+lv_obj_t * ui_TimeScreen;
+void ui_event_WifiScreenBackButton2(lv_event_t * e);
+lv_obj_t * ui_WifiScreenBackButton2;
+lv_obj_t * ui_TimeLabel;
+void ui_event_SyncTimeButton(lv_event_t * e);
+lv_obj_t * ui_SyncTimeButton;
+lv_obj_t * ui_SyncTimeButtonLabel;
+lv_obj_t * ui_ConnectToWifiSync;
+// CUSTOM VARIABLES
+lv_obj_t * uic_TimeScreen;
+lv_obj_t * uic_WifiScreenBackButton;
+lv_obj_t * uic_TimeLabel;
+lv_obj_t * uic_SyncTimeButtonLabel;
+lv_obj_t * uic_ConnectToWifiSync;
 
 // EVENTS
 void ui_event____initial_actions0(lv_event_t * e);
@@ -168,6 +192,15 @@ void ui_event_ResetToFactoryConfirmButton(lv_event_t * e)
     }
 }
 
+void ui_event_TimeSettingsButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_TimeScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 250, 0, &ui_TimeScreen_screen_init);
+    }
+}
+
 void ui_event_WiFiScreen(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -217,6 +250,33 @@ void ui_event_ConnectToNetworkButton(lv_event_t * e)
     }
 }
 
+void ui_event_TimeScreen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_SCREEN_LOADED) {
+        onTimeScreenLoaded(e);
+    }
+}
+
+void ui_event_WifiScreenBackButton2(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_SettingsScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_SettingsScreen_screen_init);
+    }
+}
+
+void ui_event_SyncTimeButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        syncTime(e);
+    }
+}
+
 void ui_event____initial_actions0(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -237,6 +297,7 @@ void ui_init(void)
     ui_MoistureScreen_screen_init();
     ui_SettingsScreen_screen_init();
     ui_WiFiScreen_screen_init();
+    ui_TimeScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_obj_add_event_cb(ui____initial_actions0, ui_event____initial_actions0, LV_EVENT_ALL, NULL);
 
