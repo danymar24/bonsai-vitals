@@ -333,7 +333,7 @@
 ///////////////////////////// Please update the following macros to configure the IO expander //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Set to 0 if not using IO Expander */
-#define ESP_PANEL_USE_EXPANDER          (0)         // 0/1
+#define ESP_PANEL_USE_EXPANDER          (1)         // 0/1
 #if ESP_PANEL_USE_EXPANDER
 /**
  * IO expander name. Choose one of the following:
@@ -342,7 +342,7 @@
  *      - TCA95xx_8bit
  *      - TCA95xx_16bit
  */
-#define ESP_PANEL_EXPANDER_NAME         TCA95xx_8bit
+#define ESP_PANEL_EXPANDER_NAME         CH422G
 
 /* IO expander Settings */
 /**
