@@ -98,6 +98,73 @@
 // #define BOARD_WAVESHARE_ESP32_P4_NANO
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Please update the following macros to configure the backlight ////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define ESP_PANEL_USE_BACKLIGHT         (1)         // 0/1
+#if ESP_PANEL_USE_BACKLIGHT
+/* IO num of backlight pin */
+#define ESP_PANEL_BACKLIGHT_IO          (45)
+#define ESP_PANEL_BACKLIGHT_ON_LEVEL    (1)         // 0: low level, 1: high level
+
+/* Set to 1 if you want to turn off the backlight after initializing the panel; otherwise, set it to turn on */
+#define ESP_PANEL_BACKLIGHT_IDLE_OFF    (0)         // 0: on, 1: off
+
+/* Set to 1 if use PWM for brightness control */
+#define ESP_PANEL_LCD_BL_USE_PWM        (1)         // 0/1
+#endif /* ESP_PANEL_USE_BACKLIGHT */
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Please update the following macros to configure the IO expander //////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Set to 0 if not using IO Expander */
+#define ESP_PANEL_USE_EXPANDER          (1)         // 0/1
+#if ESP_PANEL_USE_EXPANDER
+/**
+ * IO expander name. Choose one of the following:
+ *      - CH422G
+ *      - HT8574
+ *      - TCA95xx_8bit
+ *      - TCA95xx_16bit
+ */
+#define ESP_PANEL_EXPANDER_NAME         CH422G
+
+/* IO expander Settings */
+/**
+ * If set to 1, the driver will skip to initialize the corresponding host. Users need to initialize the host in advance.
+ * It is useful if other devices use the same host. Please ensure that the host is initialized only once.
+ */
+#define ESP_PANEL_EXPANDER_SKIP_INIT_HOST       (0)     // 0/1
+/* IO expander parameters */
+#define ESP_PANEL_EXPANDER_HOST_ID              (0)     // Typically set to 0
+#define ESP_PANEL_EXPANDER_I2C_ADDRESS          (0x20)  // The actual I2C address. Even for the same model of IC,
+                                                        // the I2C address may be different, and confirmation based on
+                                                        // the actual hardware connection is required
+#if !ESP_PANEL_EXPANDER_SKIP_INIT_HOST
+    #define ESP_PANEL_EXPANDER_I2C_CLK_HZ       (400 * 1000)
+                                                        // Typically set to 400K
+    #define ESP_PANEL_EXPANDER_I2C_SCL_PULLUP   (1)     // 0/1
+    #define ESP_PANEL_EXPANDER_I2C_SDA_PULLUP   (1)     // 0/1
+    #define ESP_PANEL_EXPANDER_I2C_IO_SCL       (18)
+    #define ESP_PANEL_EXPANDER_I2C_IO_SDA       (8)
+#endif
+#endif /* ESP_PANEL_USE_EXPANDER */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Please utilize the following macros to execute any additional code if required. //////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// #define ESP_PANEL_BEGIN_START_FUNCTION( panel )
+#define ESP_PANEL_BEGIN_EXPANDER_START_FUNCTION( panel )
+#define ESP_PANEL_BEGIN_EXPANDER_END_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_LCD_START_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_LCD_END_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_TOUCH_START_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_TOUCH_END_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_BACKLIGHT_START_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_BACKLIGHT_END_FUNCTION( panel )
+// #define ESP_PANEL_BEGIN_END_FUNCTION( panel )
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// File Version ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
