@@ -8,6 +8,9 @@
 #include "./util/preferences.h"
 #include "./util/readMoistureSensor.h"
 #include "./util/asyncWebServer.h"
+#include "expander.h"
+
+boolean BacklightState = true;
 
 void scanWifiNetworks(lv_event_t * e)
 {
@@ -158,22 +161,12 @@ void getCurrentTime()
     strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
     lv_label_set_text(ui_TimeLabel, strftime_buf);
 
-}
-
-void turnOffBacklight()
-{
-    time_t now;
-    char strftime_buf[64];
-    struct tm timeinfo;
-
-    time(&now);
-    tzset();
-
-    localtime_r(&now, &timeinfo);
-
-    if(timeinfo.tm_hour > 20 && timeinfo.tm_hour < 8) {
-        //@todo do something to turn off the screen
+    if((timeinfo.tm_hour >= 20 || timeinfo.tm_hour < 8) && lv_disp_get_inactive_time(NULL) > ONE_MINUTE) {
+        BLset(LOW);
+    } else {
+        BLset(HIGH);
     }
+
 }
 
 void oneSecondTimerEvent(lv_timer_t * timer) 
@@ -227,3 +220,4 @@ void onTimeScreenLoaded(lv_event_t * e)
         lv_obj_clear_state(ui_SyncTimeButton, LV_STATE_DISABLED); 
     }
 }
+
