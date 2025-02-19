@@ -4,11 +4,10 @@
 
 int readMoistureSensor() 
 {
-    const int dry = 3000; // value for dry sensor
+    const int dry = 3050; // value for dry sensor
     const int wet = 1450; // value for wet sensor
 
     int moistureRead = analogRead(MOISTURE_SENSOR_PIN);
-    Serial2.print(moistureRead);
     int formattedMoisture = map(moistureRead, wet, dry, 100, 0); // Convert the soil sensor reading to percentage
     return formattedMoisture;
 }

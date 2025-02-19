@@ -5,6 +5,14 @@ A Project to monitor a bonsai vitals using a Waveshare display and ESP32.
 * Display: https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3
 * LVGL for the UI: https://lvgl.io/
 
+## Features
+
+* Gets moisture from a capacitive soil sensor
+* Shows the moisture in the built in screen
+* Turns off screen during night if activated
+* Sync time with internet
+* Shows moisture in a webpage using the device ip via wifi
+
 ## Dependencies
 
 * [Soil sensor](https://www.amazon.com/gp/product/B093V62VXD/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)

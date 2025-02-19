@@ -17,6 +17,7 @@
 #include "./util/preferences.h"
 #include <SPIFFS.h>
 #include "./util/asyncWebServer.h"
+#include "expander.h"
 
 void setup()
 {
@@ -72,19 +73,9 @@ void setup()
     initWebServer();
     initWebSocket();
 
-    // ESP_IOExpander *expander = NULL;
-    // const i2c_config_t i2c_config = EXPANDER_I2C_CONFIG_DEFAULT(9, 8);
-
-    // expander = new ESP_IOExpander_CH422G((i2c_port_t)I2C_NUM_0, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, &i2c_config);
-    // expander->init();
-    // expander->begin();
-
-    // expander->multiPinMode(BACKLIGHT_CONTROL_PIN, OUTPUT);
-    // expander->multiDigitalWrite(BACKLIGHT_CONTROL_PIN, LOW);
+    ExpanderInit();
 
     pinMode(BACKLIGHT_CONTROL_PIN, OUTPUT);
-    digitalWrite(BACKLIGHT_CONTROL_PIN, LOW);
-
 
     Serial2.println(title + " end");
 }

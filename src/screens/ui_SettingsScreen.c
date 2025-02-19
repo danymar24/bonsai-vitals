@@ -40,8 +40,8 @@ void ui_SettingsScreen_screen_init(void)
     ui_ResetToFactoryButton = lv_btn_create(ui_SettingsScreen);
     lv_obj_set_width(ui_ResetToFactoryButton, 396);
     lv_obj_set_height(ui_ResetToFactoryButton, 97);
-    lv_obj_set_x(ui_ResetToFactoryButton, 1);
-    lv_obj_set_y(ui_ResetToFactoryButton, 21);
+    lv_obj_set_x(ui_ResetToFactoryButton, 3);
+    lv_obj_set_y(ui_ResetToFactoryButton, 117);
     lv_obj_set_align(ui_ResetToFactoryButton, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_ResetToFactoryButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_ResetToFactoryButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -56,8 +56,8 @@ void ui_SettingsScreen_screen_init(void)
     ui_ResetToFactoryConfirmButton = lv_btn_create(ui_SettingsScreen);
     lv_obj_set_width(ui_ResetToFactoryConfirmButton, 396);
     lv_obj_set_height(ui_ResetToFactoryConfirmButton, 97);
-    lv_obj_set_x(ui_ResetToFactoryConfirmButton, 1);
-    lv_obj_set_y(ui_ResetToFactoryConfirmButton, 21);
+    lv_obj_set_x(ui_ResetToFactoryConfirmButton, 3);
+    lv_obj_set_y(ui_ResetToFactoryConfirmButton, 117);
     lv_obj_set_align(ui_ResetToFactoryConfirmButton, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_ResetToFactoryConfirmButton, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_ResetToFactoryConfirmButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -72,10 +72,27 @@ void ui_SettingsScreen_screen_init(void)
     lv_obj_set_style_text_font(ui_ResetToFactoryConfirmButtonLabel, &lv_font_montserrat_40,
                                LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_TimeSettingsButton = lv_btn_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_TimeSettingsButton, 396);
+    lv_obj_set_height(ui_TimeSettingsButton, 97);
+    lv_obj_set_x(ui_TimeSettingsButton, 3);
+    lv_obj_set_y(ui_TimeSettingsButton, 4);
+    lv_obj_set_align(ui_TimeSettingsButton, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_TimeSettingsButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_TimeSettingsButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_TimeSettingsButtonLabel = lv_label_create(ui_TimeSettingsButton);
+    lv_obj_set_width(ui_TimeSettingsButtonLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_TimeSettingsButtonLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_TimeSettingsButtonLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_TimeSettingsButtonLabel, "Time");
+    lv_obj_set_style_text_font(ui_TimeSettingsButtonLabel, &lv_font_montserrat_40, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     lv_obj_add_event_cb(ui_SettingsBackButton, ui_event_SettingsBackButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_WiFiSettingsButton, ui_event_WiFiSettingsButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ResetToFactoryButton, ui_event_ResetToFactoryButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ResetToFactoryConfirmButton, ui_event_ResetToFactoryConfirmButton, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_TimeSettingsButton, ui_event_TimeSettingsButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SettingsScreen, ui_event_SettingsScreen, LV_EVENT_ALL, NULL);
     uic_SettingsScreen = ui_SettingsScreen;
     uic_SettingsBackButton = ui_SettingsBackButton;
@@ -85,5 +102,7 @@ void ui_SettingsScreen_screen_init(void)
     uic_ResetToFactoryButtonLabel = ui_ResetToFactoryButtonLabel;
     uic_ResetToFactoryConfirmButton = ui_ResetToFactoryConfirmButton;
     uic_ResetToFactoryConfirmButtonLabel = ui_ResetToFactoryConfirmButtonLabel;
+    uic_TimeSettingsButton = ui_TimeSettingsButton;
+    uic_TimeSettingsButtonLabel = ui_TimeSettingsButtonLabel;
 
 }

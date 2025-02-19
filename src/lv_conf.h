@@ -10,7 +10,7 @@
 #define LV_FONT_MONTSERRAT_22    0
 #define LV_FONT_MONTSERRAT_24    1
 #define LV_FONT_MONTSERRAT_26    0
-#define LV_FONT_MONTSERRAT_28    0
+#define LV_FONT_MONTSERRAT_28    1
 #define LV_FONT_MONTSERRAT_30    0
 #define LV_FONT_MONTSERRAT_32    1
 #define LV_FONT_MONTSERRAT_34    0
@@ -30,6 +30,7 @@
 
 /* Log settings */
 #define USE_LV_LOG      1   /* Enable/disable the log module */
+
 #define LV_USE_LOG      1   /* Enable/disable the log module */
 #if LV_USE_LOG
 /* How important log should be added:
