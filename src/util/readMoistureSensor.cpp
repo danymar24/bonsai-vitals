@@ -4,7 +4,7 @@
 
 int readMoistureSensor() 
 {
-    const int dry = 3000; // value for dry sensor
+    const int dry = 3050; // value for dry sensor
     const int wet = 1450; // value for wet sensor
 
     int moistureRead = analogRead(MOISTURE_SENSOR_PIN);

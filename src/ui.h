@@ -108,12 +108,28 @@ void ui_event_SyncTimeButton(lv_event_t * e);
 extern lv_obj_t * ui_SyncTimeButton;
 extern lv_obj_t * ui_SyncTimeButtonLabel;
 extern lv_obj_t * ui_ConnectToWifiSync;
+void ui_event_NightTimeSwitch(lv_event_t * e);
+extern lv_obj_t * ui_NightTimeSwitch;
+extern lv_obj_t * ui_Label10;
+extern lv_obj_t * ui_NightStartTimeLabel;
+extern lv_obj_t * ui_NightEndTimeLabel;
+void ui_event_NightStartTime(lv_event_t * e);
+extern lv_obj_t * ui_NightStartTime;
+void ui_event_NightEndTime(lv_event_t * e);
+extern lv_obj_t * ui_NightEndTime;
+extern lv_obj_t * ui_TimeScreenKeyboard;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_TimeScreen;
 extern lv_obj_t * uic_WifiScreenBackButton;
 extern lv_obj_t * uic_TimeLabel;
 extern lv_obj_t * uic_SyncTimeButtonLabel;
 extern lv_obj_t * uic_ConnectToWifiSync;
+extern lv_obj_t * uic_NightTimeSwitch;
+extern lv_obj_t * uic_NightStartTimeLabel;
+extern lv_obj_t * uic_NightEndTimeLabel;
+extern lv_obj_t * uic_NightStartTime;
+extern lv_obj_t * uic_NightEndTime;
+extern lv_obj_t * uic_TimeScreenKeyboard;
 
 // EVENTS
 

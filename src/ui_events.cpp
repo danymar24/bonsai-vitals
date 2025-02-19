@@ -161,12 +161,22 @@ void getCurrentTime()
     strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
     lv_label_set_text(ui_TimeLabel, strftime_buf);
 
-    if((timeinfo.tm_hour >= 20 || timeinfo.tm_hour < 8) && lv_disp_get_inactive_time(NULL) > ONE_MINUTE) {
-        BLset(LOW);
-    } else {
-        BLset(HIGH);
+    prefs.begin("bonsai-vitals", false);
+
+    bool turnOffScreenAtNight = prefs.getBool("night-enabled");
+
+    if(turnOffScreenAtNight) {
+        String nightStartTime = prefs.getString("night-start");
+        String nightEndTime = prefs.getString("night-end");
+
+        if((timeinfo.tm_hour >= nightStartTime.toInt() || timeinfo.tm_hour < nightEndTime.toInt()) && lv_disp_get_inactive_time(NULL) > ONE_MINUTE) {
+            BLset(LOW);
+        } else {
+            BLset(HIGH);
+        }
     }
 
+    prefs.end();
 }
 
 void oneSecondTimerEvent(lv_timer_t * timer) 
@@ -219,5 +229,60 @@ void onTimeScreenLoaded(lv_event_t * e)
         lv_obj_add_flag(ui_ConnectToWifiSync, LV_OBJ_FLAG_HIDDEN);     /// Flags
         lv_obj_clear_state(ui_SyncTimeButton, LV_STATE_DISABLED); 
     }
+
+    prefs.begin("bonsai-vitals", false);
+    bool turnOffScreenAtNight = prefs.getBool("night-enabled");
+    String nightStartTime = prefs.getString("night-start");
+    String nightEndTime = prefs.getString("night-end");
+    prefs.end();
+
+    Serial2.print("night time enabled");
+    Serial2.print(turnOffScreenAtNight);
+
+    lv_textarea_set_text(ui_NightStartTime, nightStartTime.c_str());
+    lv_textarea_set_text(ui_NightEndTime, nightEndTime.c_str());
+
+
+    if(turnOffScreenAtNight)
+    {
+        lv_obj_add_state(ui_NightTimeSwitch, LV_STATE_CHECKED);
+        lv_obj_clear_state(ui_NightStartTime, LV_STATE_DISABLED);
+        lv_obj_clear_state(ui_NightEndTime, LV_STATE_DISABLED);
+    }
 }
 
+
+void setNightStartTime(lv_event_t * e)
+{
+    const char *startTime = lv_textarea_get_text(ui_NightStartTime);
+
+	Serial2.print("Setting night start time");
+    Serial2.print(startTime);
+    prefs.begin("bonsai-vitals", false);
+    prefs.putString("night-start", startTime);
+    prefs.end();
+}
+
+void setNightEndTime(lv_event_t * e)
+{
+	const char *endTime = lv_textarea_get_text(ui_NightEndTime);
+
+	Serial2.print("Setting night end time");
+    Serial2.print(endTime);
+    prefs.begin("bonsai-vitals", false);
+    prefs.putString("night-end", endTime);
+    prefs.end();
+}
+
+void setNightTime(lv_event_t * e)
+{
+    lv_obj_t * obj = lv_event_get_target(e);
+    const bool enabled = lv_obj_has_state(obj, LV_STATE_CHECKED);
+
+	Serial2.print("Setting Night time enabled");
+    Serial2.print(enabled);
+    
+    prefs.begin("bonsai-vitals", false);
+    prefs.putBool("night-enabled", enabled);
+    prefs.end();
+}
