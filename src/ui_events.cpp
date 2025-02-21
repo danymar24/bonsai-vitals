@@ -184,6 +184,7 @@ void oneSecondTimerEvent(lv_timer_t * timer)
     redirectToMoistureScreen();
     turnOnWifiIndicator();
     getCurrentTime();
+    int formattedMoisture = readMoistureSensor();
 }
 
 void oneMinuteTimerEvent(lv_timer_t * timer)
