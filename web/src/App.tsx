@@ -1,92 +1,120 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { SocketMessage } from './types';
+import { HubStateValue, SocketMessage } from './types';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 function App() {
-  const [message, setMessage] = useState('');
-  const [receivedMessages, setReceivedMessages] = useState<any[]>([]);
-  const [moisture, setMoisture] = useState<SocketMessage>();
-  const ws = useRef<WebSocket | null>(null); // Use a ref to store the WebSocket instance
+  const [hubState, setHubState] = useState<HubStateValue>({
+    device_count: 0,
+    devices: []
+  });
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Replace with your WebSocket server URL
     ws.current = new WebSocket(`ws://${window.location.host}/ws`);
 
     ws.current.onopen = () => {
       console.log('Connected to WebSocket server');
-      // Optionally send an initial message upon connection
-      ws?.current?.send(JSON.stringify({ type: 'join', data: 'Client joined' }));
     };
 
     ws.current.onmessage = (event: MessageEvent) => {
       try {
-        const receivedData = JSON.parse(event.data); // Parse received JSON
-        const messageData: SocketMessage = receivedData;
-        console.log(event.data.name);
-        console.log(messageData);
-        if(messageData.name === 'moisture') {
-          setMoisture(messageData);
+        const receivedData = JSON.parse(event.data) as SocketMessage;
+        if (receivedData.name === 'sensor_hub' && typeof receivedData.value === 'object') {
+          setHubState(receivedData.value as HubStateValue);
         }
-        setReceivedMessages((prevMessages: any) => [...prevMessages, receivedData]);
       } catch (error) {
         console.error('Error parsing received message:', error);
-        setReceivedMessages((prevMessages: any) => [...prevMessages, event.data]); // Fallback to raw data
       }
     };
 
     ws.current.onclose = () => {
       console.log('Disconnected from WebSocket server');
-      ws.current = null; // Clear the WebSocket instance
+      ws.current = null;
     };
 
     ws.current.onerror = (error: Event) => {
       console.error('WebSocket error:', error);
     };
 
-    if(isDev) {
-      setMoisture({
-        name: 'moisture',
-        type: 'percentage',
-        value: '33'
-      })
+    if (isDev) {
+      setHubState({
+        device_count: 2,
+        moisture_percent: 42,
+        temperature_c: 22.5,
+        humidity_percent: 61,
+        devices: [
+          {
+            device_id: 'AA:BB:CC:DD:EE:FF',
+            is_synced: true,
+            moisture_percent: 42,
+            temperature_c: 22.5,
+            humidity_percent: 61,
+            aqi: 30,
+            tvoc_ppb: 88,
+            eco2_ppm: 430
+          },
+          {
+            device_id: '11:22:33:44:55:66',
+            is_synced: true,
+            moisture_percent: 68,
+            humidity_percent: 54
+          }
+        ]
+      });
     }
 
-    // Clean up on unmount to prevent memory leaks
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
+  }, []);
 
-  }, []); // Empty dependency array ensures this runs only once on mount and unmount
-
-  const sendMessage = (newMessage: string) => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      const messageToSend = JSON.stringify({ type: 'message', data: newMessage });
-      ws.current.send(messageToSend);
-      setMessage(''); // Clear the input field
-    } else {
-      console.error('WebSocket connection is not open.');
+  const renderMetric = (label: string, value?: number | string) => {
+    if (value === undefined || value === null || value === 'NaN') {
+      return null;
     }
+
+    return (
+      <div key={label}>
+        <strong>{label}:</strong> {String(value)}
+      </div>
+    );
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <div className='moisture'>
-          <p>Moisture: {moisture?.value}%</p>
+        <div className="hub-header">
+          <h1>Sensor Hub</h1>
+          <p>Tracked devices: {hubState.device_count ?? 0}</p>
         </div>
-        {/* <div>
-        {receivedMessages.map((msg, index) => (
-          <div key={index}>
-            {msg.type === 'message' ? <span>Client: {msg.data}</span> : <pre>{JSON.stringify(msg, null, 2)}</pre>}
-          </div>
-        ))}
+
+        <div className="hub-summary">
+          {renderMetric('Moisture', hubState.moisture_percent !== undefined ? `${hubState.moisture_percent}%` : undefined)}
+          {renderMetric('Temperature', hubState.temperature_c !== undefined ? `${hubState.temperature_c}°C` : undefined)}
+          {renderMetric('Humidity', hubState.humidity_percent !== undefined ? `${hubState.humidity_percent}%` : undefined)}
+          {renderMetric('AQI', hubState.aqi)}
+          {renderMetric('TVOC', hubState.tvoc_ppb !== undefined ? `${hubState.tvoc_ppb} ppb` : undefined)}
+          {renderMetric('eCO2', hubState.eco2_ppm !== undefined ? `${hubState.eco2_ppm} ppm` : undefined)}
         </div>
-        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-        <button onClick={() => sendMessage(message)}>Send</button> */}
+
+        <div className="device-list">
+          {(hubState.devices ?? []).map((device, index) => (
+            <div key={`${device.device_id ?? 'device'}-${index}`} className="device-card">
+              <h3>{device.device_id ?? `Device ${index + 1}`}</h3>
+              <div>{device.is_synced ? 'Synced' : 'Discovered'}</div>
+              {renderMetric('Moisture', device.moisture_percent !== undefined ? `${device.moisture_percent}%` : undefined)}
+              {renderMetric('Temperature', device.temperature_c !== undefined ? `${device.temperature_c}°C` : undefined)}
+              {renderMetric('Humidity', device.humidity_percent !== undefined ? `${device.humidity_percent}%` : undefined)}
+              {renderMetric('AQI', device.aqi)}
+              {renderMetric('TVOC', device.tvoc_ppb !== undefined ? `${device.tvoc_ppb} ppb` : undefined)}
+              {renderMetric('eCO2', device.eco2_ppm !== undefined ? `${device.eco2_ppm} ppm` : undefined)}
+            </div>
+          ))}
+        </div>
       </header>
     </div>
   );

@@ -88,11 +88,28 @@ void ui_SettingsScreen_screen_init(void)
     lv_label_set_text(ui_TimeSettingsButtonLabel, "Time");
     lv_obj_set_style_text_font(ui_TimeSettingsButtonLabel, &lv_font_montserrat_40, LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_MqttSettingsButton = lv_btn_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_MqttSettingsButton, 396);
+    lv_obj_set_height(ui_MqttSettingsButton, 97);
+    lv_obj_set_x(ui_MqttSettingsButton, 3);
+    lv_obj_set_y(ui_MqttSettingsButton, 116);
+    lv_obj_set_align(ui_MqttSettingsButton, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_MqttSettingsButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_clear_flag(ui_MqttSettingsButton, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_MqttSettingsButtonLabel = lv_label_create(ui_MqttSettingsButton);
+    lv_obj_set_width(ui_MqttSettingsButtonLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_MqttSettingsButtonLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_MqttSettingsButtonLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_MqttSettingsButtonLabel, "MQTT");
+    lv_obj_set_style_text_font(ui_MqttSettingsButtonLabel, &lv_font_montserrat_40, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     lv_obj_add_event_cb(ui_SettingsBackButton, ui_event_SettingsBackButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_WiFiSettingsButton, ui_event_WiFiSettingsButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ResetToFactoryButton, ui_event_ResetToFactoryButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_ResetToFactoryConfirmButton, ui_event_ResetToFactoryConfirmButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_TimeSettingsButton, ui_event_TimeSettingsButton, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_MqttSettingsButton, ui_event_MqttSettingsButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SettingsScreen, ui_event_SettingsScreen, LV_EVENT_ALL, NULL);
     uic_SettingsScreen = ui_SettingsScreen;
     uic_SettingsBackButton = ui_SettingsBackButton;
@@ -104,5 +121,7 @@ void ui_SettingsScreen_screen_init(void)
     uic_ResetToFactoryConfirmButtonLabel = ui_ResetToFactoryConfirmButtonLabel;
     uic_TimeSettingsButton = ui_TimeSettingsButton;
     uic_TimeSettingsButtonLabel = ui_TimeSettingsButtonLabel;
+    uic_MqttSettingsButton = ui_MqttSettingsButton;
+    uic_MqttSettingsButtonLabel = ui_MqttSettingsButtonLabel;
 
 }

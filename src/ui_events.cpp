@@ -8,7 +8,13 @@
 #include "./util/preferences.h"
 #include "./util/readMoistureSensor.h"
 #include "./util/asyncWebServer.h"
+#include "./util/sensorHubConfig.h"
+#include "./util/sensorHubManager.h"
+#include "./util/sensorHubMqtt.h"
 #include "expander.h"
+
+extern sensor_hub::SensorHubManager sensorHubManager;
+extern sensor_hub::SensorHubMqtt sensorHubMqtt;
 
 boolean BacklightState = true;
 
@@ -91,6 +97,216 @@ void connectToWifi(lv_event_t * e)
     }
 }
 
+void setMqttStatusText(const sensor_hub::HubConfig &config)
+{
+    if (ui_MqttStatusLabel == nullptr) {
+        return;
+    }
+
+    if (!config.mqtt.enabled) {
+        lv_label_set_text(ui_MqttStatusLabel, "MQTT disabled");
+        return;
+    }
+
+    if (sensorHubMqtt.isConnected()) {
+        lv_label_set_text(ui_MqttStatusLabel, "MQTT connected");
+        return;
+    }
+
+    if (config.mqtt.broker_host[0] == '\0') {
+        lv_label_set_text(ui_MqttStatusLabel, "Broker required");
+        return;
+    }
+
+    lv_label_set_text(ui_MqttStatusLabel, "Ready to connect");
+}
+
+void loadMqttSettingsToScreen(void)
+{
+    sensor_hub::HubConfig config;
+    sensor_hub::applyDefaultSensorHubConfig(config);
+    sensor_hub::loadSensorHubConfig(prefs, config);
+
+    if (ui_MqttEnableSwitch != nullptr) {
+        if (config.mqtt.enabled) {
+            lv_obj_add_state(ui_MqttEnableSwitch, LV_STATE_CHECKED);
+        } else {
+            lv_obj_clear_state(ui_MqttEnableSwitch, LV_STATE_CHECKED);
+        }
+    }
+
+    if (ui_MqttBrokerInput != nullptr) {
+        lv_textarea_set_text(ui_MqttBrokerInput, config.mqtt.broker_host);
+    }
+
+    if (ui_MqttPortInput != nullptr) {
+        char port[16];
+        snprintf(port, sizeof(port), "%u", config.mqtt.broker_port);
+        lv_textarea_set_text(ui_MqttPortInput, port);
+    }
+
+    if (ui_MqttUsernameInput != nullptr) {
+        lv_textarea_set_text(ui_MqttUsernameInput, config.mqtt.username);
+    }
+
+    if (ui_MqttPasswordInput != nullptr) {
+        lv_textarea_set_text(ui_MqttPasswordInput, config.mqtt.password);
+    }
+
+    if (ui_MqttTopicInput != nullptr) {
+        lv_textarea_set_text(ui_MqttTopicInput, config.mqtt.topic);
+    }
+
+    setMqttStatusText(config);
+}
+
+void saveMqttSettings(lv_event_t * e)
+{
+    sensor_hub::HubConfig config;
+    sensor_hub::applyDefaultSensorHubConfig(config);
+    sensor_hub::loadSensorHubConfig(prefs, config);
+
+    if (ui_MqttEnableSwitch != nullptr) {
+        config.mqtt.enabled = lv_obj_has_state(ui_MqttEnableSwitch, LV_STATE_CHECKED);
+    }
+
+    if (ui_MqttBrokerInput != nullptr) {
+        const char *brokerHost = lv_textarea_get_text(ui_MqttBrokerInput);
+        strlcpy(config.mqtt.broker_host, brokerHost, sizeof(config.mqtt.broker_host));
+    }
+
+    if (ui_MqttPortInput != nullptr) {
+        const char *portText = lv_textarea_get_text(ui_MqttPortInput);
+        if (portText != nullptr && portText[0] != '\0') {
+            config.mqtt.broker_port = static_cast<uint16_t>(strtoul(portText, nullptr, 10));
+        }
+    }
+
+    if (ui_MqttUsernameInput != nullptr) {
+        const char *username = lv_textarea_get_text(ui_MqttUsernameInput);
+        strlcpy(config.mqtt.username, username, sizeof(config.mqtt.username));
+    }
+
+    if (ui_MqttPasswordInput != nullptr) {
+        const char *password = lv_textarea_get_text(ui_MqttPasswordInput);
+        strlcpy(config.mqtt.password, password, sizeof(config.mqtt.password));
+    }
+
+    if (ui_MqttTopicInput != nullptr) {
+        const char *topic = lv_textarea_get_text(ui_MqttTopicInput);
+        strlcpy(config.mqtt.topic, topic, sizeof(config.mqtt.topic));
+    }
+
+    if (config.mqtt.enabled && config.mqtt.broker_host[0] == '\0') {
+        config.mqtt.enabled = false;
+        lv_label_set_text(ui_MqttStatusLabel, "Broker required");
+    }
+
+    sensor_hub::saveSensorHubConfig(prefs, config);
+    sensorHubMqtt.configure(config);
+    setMqttStatusText(config);
+}
+
+void ui_event_MqttScreen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    if (event_code == LV_EVENT_SCREEN_LOADED) {
+        loadMqttSettingsToScreen();
+    }
+}
+
+void ui_event_MqttScreenBackButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_SettingsScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 250, 0, &ui_SettingsScreen_screen_init);
+    }
+}
+
+void ui_event_MqttEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_VALUE_CHANGED) {
+        saveMqttSettings(e);
+    }
+}
+
+void ui_event_MqttBrokerInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_keyboard_set_target(ui_MqttScreenKeyboard, ui_MqttBrokerInput);
+    }
+    if (event_code == LV_EVENT_DEFOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
+void ui_event_MqttPortInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_keyboard_set_target(ui_MqttScreenKeyboard, ui_MqttPortInput);
+    }
+    if (event_code == LV_EVENT_DEFOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
+void ui_event_MqttUsernameInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_keyboard_set_target(ui_MqttScreenKeyboard, ui_MqttUsernameInput);
+    }
+    if (event_code == LV_EVENT_DEFOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
+void ui_event_MqttPasswordInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_keyboard_set_target(ui_MqttScreenKeyboard, ui_MqttPasswordInput);
+    }
+    if (event_code == LV_EVENT_DEFOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
+void ui_event_MqttTopicInput(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_keyboard_set_target(ui_MqttScreenKeyboard, ui_MqttTopicInput);
+    }
+    if (event_code == LV_EVENT_DEFOCUSED) {
+        _ui_flag_modify(ui_MqttScreenKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+}
+
+void ui_event_MqttSaveButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED) {
+        saveMqttSettings(e);
+    }
+}
+
 void resetSettings(lv_event_t * e)
 {
 	prefs.begin("bonsai-vitals", false);
@@ -121,12 +337,23 @@ void getWifiStatus(lv_event_t * e = NULL)
 
 void readMoisture(lv_event_t * e)
 {
-    int formattedMoisture = readMoistureSensor();
+    sensor_hub::SensorReading reading;
+    int formattedMoisture = 0;
+    bool latestReadingAvailable = sensorHubManager.getLatestKnownReading(reading);
 
-    lv_arc_set_value(ui_MoistureGauge, formattedMoisture);
-    lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%%", formattedMoisture);
-    lv_label_set_text_fmt(ui_MoistureLabel, "Moisture", formattedMoisture);
-    notifyClients("moisture", "percentage", String(formattedMoisture));
+    if (latestReadingAvailable && !isnan(reading.moisture_percent)) {
+        formattedMoisture = (int)constrain(round(reading.moisture_percent), 0.0f, 100.0f);
+        lv_arc_set_value(ui_MoistureGauge, formattedMoisture);
+        lv_label_set_text_fmt(ui_MoisturePercentageLabel, "%d%%", formattedMoisture);
+        lv_label_set_text(ui_MoistureLabel, "Hub latest");
+    } else {
+        formattedMoisture = 0;
+        lv_arc_set_value(ui_MoistureGauge, 0);
+        lv_label_set_text(ui_MoisturePercentageLabel, "0%");
+        lv_label_set_text(ui_MoistureLabel, "Awaiting data");
+    }
+
+    publishHubStateToClients();
 }
 
 void redirectToMoistureScreen()
@@ -184,7 +411,7 @@ void oneSecondTimerEvent(lv_timer_t * timer)
     redirectToMoistureScreen();
     turnOnWifiIndicator();
     getCurrentTime();
-    int formattedMoisture = readMoistureSensor();
+    readMoisture(NULL);
 }
 
 void oneMinuteTimerEvent(lv_timer_t * timer)
@@ -286,4 +513,9 @@ void setNightTime(lv_event_t * e)
     prefs.begin("bonsai-vitals", false);
     prefs.putBool("night-enabled", enabled);
     prefs.end();
+}
+
+void getPrice(lv_event_t * e)
+{
+	// Your code here
 }

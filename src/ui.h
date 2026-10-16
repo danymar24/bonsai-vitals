@@ -131,6 +131,44 @@ extern lv_obj_t * uic_NightStartTime;
 extern lv_obj_t * uic_NightEndTime;
 extern lv_obj_t * uic_TimeScreenKeyboard;
 
+// SCREEN: ui_MqttScreen
+void ui_MqttScreen_screen_init(void);
+void ui_event_MqttScreen(lv_event_t * e);
+extern lv_obj_t * ui_MqttScreen;
+void ui_event_MqttScreenBackButton(lv_event_t * e);
+extern lv_obj_t * ui_MqttScreenBackButton;
+void ui_event_MqttSettingsButton(lv_event_t * e);
+extern lv_obj_t * ui_MqttSettingsButton;
+extern lv_obj_t * ui_MqttSettingsButtonLabel;
+void ui_event_MqttEnableSwitch(lv_event_t * e);
+extern lv_obj_t * ui_MqttEnableSwitch;
+extern lv_obj_t * ui_MqttEnableLabel;
+extern lv_obj_t * ui_MqttBrokerInput;
+extern lv_obj_t * ui_MqttPortInput;
+extern lv_obj_t * ui_MqttUsernameInput;
+extern lv_obj_t * ui_MqttPasswordInput;
+extern lv_obj_t * ui_MqttTopicInput;
+extern lv_obj_t * ui_MqttSaveButton;
+extern lv_obj_t * ui_MqttSaveButtonLabel;
+extern lv_obj_t * ui_MqttStatusLabel;
+extern lv_obj_t * ui_MqttScreenKeyboard;
+// CUSTOM VARIABLES
+extern lv_obj_t * uic_MqttScreen;
+extern lv_obj_t * uic_MqttScreenBackButton;
+extern lv_obj_t * uic_MqttSettingsButton;
+extern lv_obj_t * uic_MqttSettingsButtonLabel;
+extern lv_obj_t * uic_MqttEnableSwitch;
+extern lv_obj_t * uic_MqttEnableLabel;
+extern lv_obj_t * uic_MqttBrokerInput;
+extern lv_obj_t * uic_MqttPortInput;
+extern lv_obj_t * uic_MqttUsernameInput;
+extern lv_obj_t * uic_MqttPasswordInput;
+extern lv_obj_t * uic_MqttTopicInput;
+extern lv_obj_t * uic_MqttSaveButton;
+extern lv_obj_t * uic_MqttSaveButtonLabel;
+extern lv_obj_t * uic_MqttStatusLabel;
+extern lv_obj_t * uic_MqttScreenKeyboard;
+
 // EVENTS
 
 void ui_event____initial_actions0(lv_event_t * e);

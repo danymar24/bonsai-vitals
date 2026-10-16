@@ -4,6 +4,6 @@
 void initWebSocket();
 void initWebServer();
 void notifyClients(String name, String type, String value);
-
+void publishHubStateToClients();
 
 #endif

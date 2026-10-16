@@ -21,6 +21,18 @@ void syncTime(lv_event_t * e);
 void setNightTime(lv_event_t * e);
 void setNightStartTime(lv_event_t * e);
 void setNightEndTime(lv_event_t * e);
+void loadMqttSettingsToScreen(void);
+void saveMqttSettings(lv_event_t * e);
+void ui_event_MqttScreenBackButton(lv_event_t * e);
+void ui_event_MqttSettingsButton(lv_event_t * e);
+void ui_event_MqttEnableSwitch(lv_event_t * e);
+void ui_event_MqttBrokerInput(lv_event_t * e);
+void ui_event_MqttPortInput(lv_event_t * e);
+void ui_event_MqttUsernameInput(lv_event_t * e);
+void ui_event_MqttPasswordInput(lv_event_t * e);
+void ui_event_MqttTopicInput(lv_event_t * e);
+void ui_event_MqttSaveButton(lv_event_t * e);
+void ui_event_MqttScreen(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

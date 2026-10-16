@@ -15,9 +15,15 @@
 #include "./ui.h"
 
 #include "./util/preferences.h"
+#include "./util/sensorHubConfig.h"
+#include "./util/sensorHubManager.h"
+#include "./util/sensorHubMqtt.h"
 #include <SPIFFS.h>
 #include "./util/asyncWebServer.h"
 #include "expander.h"
+
+sensor_hub::SensorHubManager sensorHubManager;
+sensor_hub::SensorHubMqtt sensorHubMqtt;
 
 void setup()
 {
@@ -27,12 +33,21 @@ void setup()
     Serial2.begin(115200, SERIAL_8N1, 44, 43);
     Serial2.println(title + " start");
 
+    sensor_hub::HubConfig hubConfig;
+    sensor_hub::applyDefaultSensorHubConfig(hubConfig);
+    sensor_hub::loadSensorHubConfig(prefs, hubConfig);
+    sensorHubMqtt.configure(hubConfig);
+
     String network_ssid = prefs.getString("ssid");
     String password_value = prefs.getString("password");
     prefs.end();
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
+
+    if (!sensorHubManager.begin()) {
+        Serial2.println("Sensor hub discovery failed to initialize");
+    }
 
     if (network_ssid == "" && password_value == "")
     {
@@ -82,5 +97,15 @@ void setup()
 
 void loop()
 {
+    static uint8_t reportedWifiChannel = 0;
+    if (WiFi.status() == WL_CONNECTED) {
+        const uint8_t channel = WiFi.channel();
+        if (channel != 0 && channel != reportedWifiChannel) {
+            Serial2.printf("Hub Wi-Fi / ESP-NOW channel: %u\n", channel);
+            reportedWifiChannel = channel;
+        }
+    }
+
+    sensorHubMqtt.loop();
     delay(2);
 }

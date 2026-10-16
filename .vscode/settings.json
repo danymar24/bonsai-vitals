@@ -15,5 +15,7 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/dany_/Documents/Dev/lvgl/bonsai-vitals/src",
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

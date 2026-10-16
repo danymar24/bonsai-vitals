@@ -1,57 +1,82 @@
-# Bonsai Vitals
+# Bonsai Vitals Sensor Hub
 
-A Project to monitor a bonsai vitals using a Waveshare display and ESP32.
+This repository has been repurposed from a single local soil-sensor device into a hub that listens for ESP32 sensor broadcasts over ESP-NOW, tracks multiple devices, shows their readings on the built-in display and hosted web UI, and can optionally forward the same normalized state to MQTT.
 
 * Display: https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3
-* LVGL for the UI: https://lvgl.io/
+* LVGL UI: https://lvgl.io/
+* Web client: React + TypeScript
+* Radio: ESP-NOW with Wi-Fi station mode
 
 ## Features
 
-* Gets moisture from a capacitive soil sensor
-* Shows the moisture in the built in screen
-* Turns off screen during night if activated
-* Sync time with internet
-* Shows moisture in a webpage using the device ip via wifi
+* Discovers and tracks multiple ESP32 sensor devices over ESP-NOW
+* Maintains a normalized device registry keyed by sender identity
+* Shows the latest received values on the LVGL display
+* Serves a hosted web client with the same hub-state payload
+* Supports optional MQTT forwarding for canonical sensor snapshots
+* Persists MQTT and discovery settings in Preferences/NVS
+* Keeps the UI and WebSocket payload aligned around the same sensor names
 
-## Dependencies
+## Core contract
 
-* [Soil sensor](https://www.amazon.com/gp/product/B093V62VXD/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
-* [Water Pump](https://www.amazon.com/gp/product/B093V62VXD/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+The hub uses a normalized device-state model with these exact metric names when present:
+
+* `moisture_percent` (required for accepted data)
+* `temperature_c`
+* `humidity_percent`
+* `aqi`
+* `tvoc_ppb`
+* `eco2_ppm`
+
+Optional values are omitted when unavailable instead of being fabricated as zeros.
 
 ## Development
 
 ### UI
-For the UI, I am using [SquareLine Studio](https://squareline.io/)
+For the UI, SquareLine Studio is used for the generated LVGL source, and the generated files remain under `src/`.
 
-### Arduino
-For the logic and c/cpp code, I am using VSCode and platformio.
+### Firmware
+The firmware is built with PlatformIO using the `ESP-LCD` environment defined in `platformio.ini`.
 
-## Sensors
+### Web app
+The web app is built using React. Typical development flow:
 
-### Soil Moisture sensor
-
-The Soil sensor is connected to the pin 6, this can be changed in the `lv_config.h` file.
-
-```h
-#define MOISTURE_SENSOR_PIN 6
-```
-
-## Web
-
-A web version is available to view the vitals and configuration.
-
-### Development
-
-The web app is built using React, to start developing follow this steps:
 * `cd web`
 * `npm install`
 * `npm run start`
-* Go to the file `App.tsx` and modify it
 
-### Push files
+Production build status:
 
-To push the files, go to the Platformio tab in VSCode > ESP-LCD > Platform > Upload Filesystem Image
+* `npm --prefix web run build` is currently passing in this workspace
 
-This steps will compile the React app and push it through SPIFFS.
+### SPIFFS build hook
+The `extra_script.py` hook builds the web app and copies the production output into the generated SPIFFS `data/` directory during the PlatformIO build flow.
 
-Based on the sample of [esp-arduino-libs/ESP32_Display_Panel](https://github.com/esp-arduino-libs/ESP32_Display_Panel)
+## MQTT
+
+MQTT is opt-in. When enabled, the hub publishes the same canonical JSON payload it serves over the WebSocket API to the configured broker/topic.
+
+Important security notes:
+
+* Broker credentials are stored in the device Preferences store, not hard-coded in source.
+* Credentials are not included in the served web status payloads or MQTT topic payloads.
+* HTTPS/TLS is not enabled by default in the current config; use the device settings and broker configuration according to the deployment environment.
+
+## Build and validation status
+
+Validated in this workspace:
+
+* React production build passes via `npm --prefix web run build`
+
+Hardware-only checks remain separate from build verification and must be done on the target ESP32-S3 hub with compatible sensor devices:
+
+* ESP-NOW discovery and packet validation
+* Wi-Fi and ESP-NOW coexistence while the hub remains connected to a network
+* MQTT enable/disable and broker outage/recovery behavior
+* End-to-end display/web parity on real hardware
+
+## Historical note
+
+The original project used a direct capacitive soil sensor attached to the ESP32. This repo has been migrated to a hub architecture and should not be treated as a direct-sensor project anymore.
+
+This work remains scoped to the hub repository only; the ESP32 sensor firmware is out of scope for this project.
