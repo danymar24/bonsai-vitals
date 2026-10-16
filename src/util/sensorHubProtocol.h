@@ -17,6 +17,7 @@ enum class PacketType : uint8_t {
     SensorData = 2,
     SyncRequest = 3,
     SyncResponse = 4,
+    ChannelAnnouncement = 5,
 };
 
 struct SensorReading {

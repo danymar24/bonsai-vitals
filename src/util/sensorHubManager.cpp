@@ -40,6 +40,31 @@ bool SensorHubManager::begin() {
     return true;
 }
 
+bool SensorHubManager::broadcastChannelAnnouncement(uint8_t channel) {
+    if (!initialized_ || channel < 1 || channel > 13) {
+        return false;
+    }
+
+    static const uint8_t broadcastMac[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    if (!esp_now_is_peer_exist(broadcastMac)) {
+        esp_now_peer_info_t peerInfo{};
+        memcpy(peerInfo.peer_addr, broadcastMac, sizeof(broadcastMac));
+        peerInfo.channel = 0;  // Use the hub interface's current channel.
+        peerInfo.ifidx = WIFI_IF_STA;
+        peerInfo.encrypt = false;
+        if (esp_now_add_peer(&peerInfo) != ESP_OK) {
+            return false;
+        }
+    }
+
+    SensorPacket packet{};
+    packet.packet_type = static_cast<uint8_t>(PacketType::ChannelAnnouncement);
+    packet.flags = channel;
+    packet.sequence = millis();
+    packet.timestamp_ms = millis();
+    return esp_now_send(broadcastMac, reinterpret_cast<const uint8_t *>(&packet), sizeof(packet)) == ESP_OK;
+}
+
 void SensorHubManager::stop() {
     if (!initialized_) {
         return;

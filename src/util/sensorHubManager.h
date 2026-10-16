@@ -15,6 +15,7 @@ public:
     bool begin();
     void stop();
     void clear();
+    bool broadcastChannelAnnouncement(uint8_t channel);
 
     bool isDiscoveryEnabled() const { return discovery_enabled_; }
     void setDiscoveryEnabled(bool enabled) { discovery_enabled_ = enabled; }

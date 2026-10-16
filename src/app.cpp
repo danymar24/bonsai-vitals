@@ -98,13 +98,28 @@ void setup()
 void loop()
 {
     static uint8_t reportedWifiChannel = 0;
-    if (WiFi.status() == WL_CONNECTED) {
-        const uint8_t channel = WiFi.channel();
-        if (channel != 0 && channel != reportedWifiChannel) {
+    static uint8_t announcedChannel = 0;
+    static uint32_t lastChannelAnnouncementMs = 0;
+    static bool wasWifiConnected = false;
+    const uint32_t now = millis();
+    const bool wifiConnected = WiFi.status() == WL_CONNECTED;
+    uint8_t channel = WiFi.channel();
+    if (channel < 1 || channel > 13) {
+        channel = 1;
+    }
+
+    if (wifiConnected && channel != reportedWifiChannel) {
             Serial2.printf("Hub Wi-Fi / ESP-NOW channel: %u\n", channel);
             reportedWifiChannel = channel;
+    }
+
+    if ((wifiConnected && !wasWifiConnected) || channel != announcedChannel || now - lastChannelAnnouncementMs >= 250) {
+        if (sensorHubManager.broadcastChannelAnnouncement(channel)) {
+            announcedChannel = channel;
+            lastChannelAnnouncementMs = now;
         }
     }
+    wasWifiConnected = wifiConnected;
 
     sensorHubMqtt.loop();
     delay(2);
